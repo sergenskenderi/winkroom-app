@@ -1,17 +1,19 @@
 {
   "expo": {
     "name": "winkroom-app",
-    "slug": "winkroom-app",
+    "slug": "winkroom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "winkroomapp",
+    "scheme": "winkroom-app",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.sergenskenderi.winkroom-app"
     },
     "android": {
+      "package": "com.sergenskenderi.winkroom-app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -37,6 +39,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0e8ac5d7-f6c4-4aca-ae86-739de52b1c8e"
+      }
+    },
+    "owner": "sergenskenderi"
   }
 }
