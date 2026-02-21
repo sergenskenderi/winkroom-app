@@ -10,10 +10,10 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sergenskenderi.winkroom-app"
+      "bundleIdentifier": "com.sergenskenderi.winkroom_app"
     },
     "android": {
-      "package": "com.sergenskenderi.winkroom-app",
+      "package": "com.sergenskenderi.winkroom_app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

@@ -1,119 +1,96 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
-import { Colors } from '@/constants/Colors';
+import { useTranslation } from '@/contexts/I18nContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import * as Linking from 'expo-linking';
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+
+const GAMES = [
+  { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1' },
+  { id: 'guess-the-paint', route: null, icon: 'color-palette' as const, accent: '#8B5CF6' },
+  { id: 'fool-dance', route: null, icon: 'musical-notes' as const, accent: '#10B981' },
+];
 
 export default function GamesScreen() {
   const colorScheme = useColorScheme();
-  const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
+  const { t } = useTranslation();
+  const isDark = colorScheme === 'dark';
+  const cardBg = isDark ? '#1F2937' : '#FFFFFF';
+  const descColor = isDark ? '#9CA3AF' : '#666666';
 
-  const handleGamePress = (gameId: string) => {
-    if (gameId === 'one-word-unites') {
-      // Navigate to the one word unites game page
-      router.push('/games/one-word-unites' as any);
-    }
-    // Add other games as they become available
+  const handleGamePress = (game: (typeof GAMES)[0]) => {
+    if (game.route) router.push(game.route as any);
+  };
+
+  const handleRateUs = () => {
+    Linking.openURL('https://apps.apple.com/app/idXXXXXXXX').catch(() =>
+      Alert.alert(t('common.error'), t('home.couldNotOpen'))
+    );
+  };
+
+  const handleSettings = () => {
+    router.push('/settings');
+  };
+
+  const handleTerms = () => {
+    Linking.openURL('https://example.com/terms').catch(() =>
+      Alert.alert(t('common.error'), t('home.couldNotOpenTerms'))
+    );
   };
 
   return (
     <ThemedView style={styles.container}>
-      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
-        <ThemedView style={styles.welcomeSection}>
-          <ThemedText style={styles.welcomeText}>Welcome to WinkRoom Games!</ThemedText>
-          <ThemedText style={styles.subtitleText}>Discover and play amazing games</ThemedText>
-        </ThemedView>
-
-        <ThemedView style={styles.gamesContainer}>
-          {/* One Word Unites - Active Game */}
-          <TouchableOpacity 
-            style={[
-              styles.gameCard,
-              { 
-                backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF',
-                borderWidth: 1,
-                borderColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB'
-              }
-            ]}
-            onPress={() => handleGamePress('one-word-unites')}
-            activeOpacity={0.8}
-          >
-            <ThemedView style={styles.gameHeader}>
-              <ThemedView style={styles.gameIconContainer}>
-                <Ionicons name="people" size={32} color="#FFFFFF" />
-              </ThemedView>
-              <ThemedView style={styles.gameTitleContainer}>
-                <ThemedText style={styles.gameTitle}>One Word Unites</ThemedText>
-                <ThemedText style={styles.gameSubtitle}>Social Deduction</ThemedText>
-              </ThemedView>
-              <Ionicons name="chevron-forward" size={24} color={colors.tint} />
-            </ThemedView>
-            
-            <ThemedText style={styles.gameDescription}>
-              One word unites the group — but one player is the intruder with a different word.
-            </ThemedText>
-
-            <TouchableOpacity style={[styles.playButton, { backgroundColor: colors.tint }]}>
-              <Ionicons name="play" size={20} color="#FFFFFF" />
-              <ThemedText style={styles.playButtonText}>Play Now</ThemedText>
+      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+        {GAMES.map((game) => {
+          const canPress = !!game.route;
+          return (
+            <TouchableOpacity
+              key={game.id}
+              activeOpacity={0.85}
+              onPress={() => handleGamePress(game)}
+              disabled={!canPress}
+              style={[styles.card, { backgroundColor: cardBg }]}
+            >
+              <View style={styles.cardTop}>
+                <ThemedText style={styles.cardTitle}>{t(`home.dashboard.${game.id}.title`)}</ThemedText>
+                <ThemedText style={[styles.cardDescription, { color: descColor }]}>
+                  {t(`home.dashboard.${game.id}.description`)}
+                </ThemedText>
+              </View>
+              <View style={[styles.cardIllustration, { backgroundColor: game.accent + '18' }]}>
+                <View style={[styles.cardIconWrap, { backgroundColor: game.accent }]}>
+                  <Ionicons name={game.icon} size={48} color="#FFFFFF" />
+                </View>
+                {!canPress && (
+                  <View style={styles.comingSoonBadge}>
+                    <ThemedText style={styles.comingSoonText}>{t('games.oneWordUnites.comingSoon')}</ThemedText>
+                  </View>
+                )}
+              </View>
             </TouchableOpacity>
+          );
+        })}
+
+        <View style={[styles.footer, { backgroundColor: cardBg }]}>
+          <TouchableOpacity style={styles.footerRow} onPress={handleRateUs} activeOpacity={0.7}>
+            <Ionicons name="star" size={22} color={descColor} />
+            <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.rateUs')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={descColor} />
           </TouchableOpacity>
-
-          {/* Guess the Paint - Coming Soon */}
-          <ThemedView style={[
-            styles.gameCard, 
-            styles.comingSoonCard,
-            { 
-              backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF',
-              borderWidth: 1,
-              borderColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB'
-            }
-          ]}>
-            <ThemedView style={styles.gameHeader}>
-              <ThemedView style={[styles.gameIconContainer, styles.comingSoonIcon]}>
-                <Ionicons name="color-palette" size={32} color="#FFFFFF" />
-              </ThemedView>
-              <ThemedView style={styles.gameTitleContainer}>
-                <ThemedText style={[styles.gameTitle, styles.comingSoonText]}>Guess the Paint</ThemedText>
-                <ThemedText style={[styles.gameSubtitle, styles.comingSoonText]}>Coming Soon</ThemedText>
-              </ThemedView>
-              <Ionicons name="time" size={24} color="#999999" />
-            </ThemedView>
-            
-            <ThemedText style={[styles.gameDescription, styles.comingSoonText]}>
-              A creative guessing game where colors and imagination collide.
-            </ThemedText>
-          </ThemedView>
-
-          {/* Fool Dance - Coming Soon */}
-          <ThemedView style={[
-            styles.gameCard, 
-            styles.comingSoonCard,
-            { 
-              backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF',
-              borderWidth: 1,
-              borderColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB'
-            }
-          ]}>
-            <ThemedView style={styles.gameHeader}>
-              <ThemedView style={[styles.gameIconContainer, styles.comingSoonIcon]}>
-                <Ionicons name="musical-notes" size={32} color="#FFFFFF" />
-              </ThemedView>
-              <ThemedView style={styles.gameTitleContainer}>
-                <ThemedText style={[styles.gameTitle, styles.comingSoonText]}>Fool Dance</ThemedText>
-                <ThemedText style={[styles.gameSubtitle, styles.comingSoonText]}>Coming Soon</ThemedText>
-              </ThemedView>
-              <Ionicons name="time" size={24} color="#999999" />
-            </ThemedView>
-            
-            <ThemedText style={[styles.gameDescription, styles.comingSoonText]}>
-              Dance to the rhythm and fool your friends with unexpected moves.
-            </ThemedText>
-          </ThemedView>
-        </ThemedView>
+          <TouchableOpacity style={styles.footerRow} onPress={handleSettings} activeOpacity={0.7}>
+            <Ionicons name="settings-outline" size={22} color={descColor} />
+            <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.settings')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={descColor} />
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.footerRow} onPress={handleTerms} activeOpacity={0.7}>
+            <Ionicons name="document-text-outline" size={22} color={descColor} />
+            <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.terms')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={descColor} />
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     </ThemedView>
   );
@@ -122,107 +99,89 @@ export default function GamesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 60, // Account for status bar
+    paddingTop: 60,
   },
-  content: {
+  scroll: {
     flex: 1,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
-  welcomeSection: {
-    paddingVertical: 24,
-    alignItems: 'center',
-  },
-  welcomeText: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginBottom: 8,
-  },
-  subtitleText: {
-    fontSize: 16,
-    opacity: 0.7,
-    textAlign: 'center',
-  },
-  gamesContainer: {
-    paddingVertical: 16,
-  },
-  gameCard: {
-    width: '100%',
-    borderRadius: 16,
-    padding: 20,
+  card: {
+    borderRadius: 28,
+    padding: 24,
     marginBottom: 20,
     shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 5,
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.12,
+    shadowRadius: 24,
+    elevation: 8,
+    overflow: 'hidden',
   },
-  gameHeader: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
-    backgroundColor: 'transparent',
+  cardTop: {
+    marginBottom: 20,
   },
-  gameIconContainer: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: '#6366F1',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 16,
-    shadowColor: '#6366F1',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  gameTitleContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  gameTitle: {
-    fontSize: 20,
+  cardTitle: {
+    fontSize: 26,
     fontWeight: 'bold',
-    marginBottom: 4,
+    lineHeight: 32,
+    marginBottom: 8,
   },
-  gameSubtitle: {
-    fontSize: 14,
-    opacity: 0.6,
-    fontWeight: '500',
-  },
-  gameDescription: {
-    fontSize: 16,
+  cardDescription: {
+    fontSize: 15,
     lineHeight: 22,
-    opacity: 0.8,
   },
-
-  playButton: {
-    flexDirection: 'row',
+  cardIllustration: {
+    height: 140,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    gap: 8,
+    position: 'relative',
   },
-  playButtonText: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '600',
+  cardIconWrap: {
+    width: 88,
+    height: 88,
+    borderRadius: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  comingSoonCard: {
-    opacity: 0.5,
-  },
-  comingSoonIcon: {
-    backgroundColor: '#9CA3AF',
+  comingSoonBadge: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    backgroundColor: '#F59E0B',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 10,
   },
   comingSoonText: {
-    opacity: 0.6,
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  footer: {
+    borderRadius: 28,
+    padding: 16,
+    marginBottom: 32,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.08,
+    shadowRadius: 12,
+    elevation: 4,
+  },
+  footerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+  },
+  footerText: {
+    flex: 1,
+    fontSize: 16,
+    marginLeft: 12,
   },
 });

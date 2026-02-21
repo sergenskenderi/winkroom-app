@@ -1,8 +1,7 @@
 import { Tabs } from 'expo-router';
-import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import ProtectedRoute from '@/components/ProtectedRoute';
+// import ProtectedRoute from '@/components/ProtectedRoute'; // Temporarily disabled
 import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
@@ -12,20 +11,16 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ProtectedRoute>
+    // <ProtectedRoute> // Temporarily disabled - no authentication required
       <Tabs
         screenOptions={{
           tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: false,
           tabBarButton: HapticTab,
           tabBarBackground: TabBarBackground,
-          tabBarStyle: Platform.select({
-            ios: {
-              // Use a transparent background on iOS to show the blur effect
-              position: 'absolute',
-            },
-            default: {},
-          }),
+          tabBarStyle: {
+            display: 'none', // Hide the tab bar
+          },
         }}>
         <Tabs.Screen
           name="index"
@@ -34,14 +29,15 @@ export default function TabLayout() {
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="gamecontroller.fill" color={color} />,
           }}
         />
-        <Tabs.Screen
+        {/* Profile tab temporarily disabled - will be re-enabled later */}
+        {/* <Tabs.Screen
           name="profile"
           options={{
             title: 'Profile',
             tabBarIcon: ({ color }) => <IconSymbol size={28} name="person.fill" color={color} />,
           }}
-        />
+        /> */}
       </Tabs>
-    </ProtectedRoute>
+    // </ProtectedRoute> // Temporarily disabled
   );
 }

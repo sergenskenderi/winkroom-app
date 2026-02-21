@@ -24,6 +24,13 @@ export default function GamesLayout() {
           presentation: 'card'
         }} 
       />
+      <Stack.Screen 
+        name="suspect" 
+        options={{ 
+          headerShown: false,
+          presentation: 'card'
+        }} 
+      />
     </Stack>
   );
 } 

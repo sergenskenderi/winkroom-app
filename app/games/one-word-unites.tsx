@@ -1,6 +1,7 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import { useTranslation } from '@/contexts/I18nContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -10,6 +11,7 @@ export default function OneWordUnitesGameScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
+  const { t } = useTranslation();
 
   const handleBackPress = () => {
     router.back();
@@ -31,8 +33,6 @@ export default function OneWordUnitesGameScreen() {
           <TouchableOpacity onPress={handleBackPress} style={styles.backButton}>
             <Ionicons name="arrow-back" size={24} color={colors.tint} />
           </TouchableOpacity>
-          <ThemedText style={styles.headerTitle}>One Word Unites</ThemedText>
-          <ThemedView style={styles.placeholder} />
         </ThemedView>
 
         {/* Game Icon */}
@@ -42,51 +42,18 @@ export default function OneWordUnitesGameScreen() {
 
         {/* Game Title */}
         <ThemedView style={styles.titleSection}>
-          <ThemedText style={styles.gameTitle}>One Word Unites</ThemedText>
-          <ThemedText style={styles.gameSubtitle}>Social Deduction</ThemedText>
+          <ThemedText style={styles.gameTitle}>{t('games.oneWordUnites.title')}</ThemedText>
+          <ThemedText style={styles.gameSubtitle}>{t('games.oneWordUnites.subtitle')}</ThemedText>
         </ThemedView>
 
         {/* Game Description */}
         <ThemedView style={styles.descriptionSection}>
-          <ThemedText style={styles.description}>
-            One word unites the group — but one player is the intruder with a different word. 
-            Can you speak in hints without revealing too much? Can you spot the odd one out before it's too late?
-          </ThemedText>
-        </ThemedView>
-
-        {/* How to Play */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>🔹 How to Play</ThemedText>
-          <ThemedText style={styles.sectionText}>
-            • Each player receives a secret word{'\n'}
-            • All but one will see the same word — the intruder gets a different one{'\n'}
-            • In turn, each player gives a single-word clue to hint at their word — careful not to say it outright!{'\n'}
-            • After all clues are revealed, everyone votes on who they think the intruder is
-          </ThemedText>
-        </ThemedView>
-
-        {/* Scoring */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>🎯 Scoring</ThemedText>
-          <ThemedText style={styles.sectionText}>
-            ✅ Guess the intruder correctly? You earn 1 point{'\n'}
-            😈 Fool everyone as the intruder? You earn 3 points{'\n'}
-            🤷‍♂️ Got some votes but weren't the intruder? No points — try to blend in better next round
-          </ThemedText>
-        </ThemedView>
-
-        {/* Strategy */}
-        <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>💡 Strategy</ThemedText>
-          <ThemedText style={styles.sectionText}>
-            Choose your word carefully — too obvious and you reveal your secret, too vague and you'll look suspicious.{'\n\n'}
-            Think fast. Speak smart. Blend in... or stand out just enough.
-          </ThemedText>
+          <ThemedText style={styles.description}>{t('games.oneWordUnites.description')}</ThemedText>
         </ThemedView>
 
         {/* Game Modes */}
         <ThemedView style={styles.section}>
-          <ThemedText style={styles.sectionTitle}>🎮 Game Modes</ThemedText>
+          <ThemedText style={styles.sectionTitle}>🎮 {t('games.oneWordUnites.gameModes')}</ThemedText>
           
           {/* Single Device Mode */}
           <TouchableOpacity 
@@ -96,37 +63,43 @@ export default function OneWordUnitesGameScreen() {
           >
             <ThemedView style={styles.modeHeader}>
               <Ionicons name="phone-portrait" size={32} color={colors.tint} />
-              <ThemedText style={styles.modeTitle}>Single Device</ThemedText>
+              <ThemedText style={styles.modeTitle}>{t('games.oneWordUnites.singleDevice')}</ThemedText>
             </ThemedView>
-            <ThemedText style={styles.modeDescription}>
-              Pass the phone around! Each player reads their word and gives clues in turn. Perfect for small groups.
-            </ThemedText>
+            <ThemedText style={styles.modeDescription}>{t('games.oneWordUnites.singleDeviceDesc')}</ThemedText>
             <ThemedView style={styles.modeFeatures}>
-              <ThemedText style={styles.modeFeature}>• Manual point scoring</ThemedText>
-              <ThemedText style={styles.modeFeature}>• Custom game settings</ThemedText>
-              <ThemedText style={styles.modeFeature}>• Pass-and-play style</ThemedText>
+              <ThemedText style={styles.modeFeature}>• {t('games.oneWordUnites.singleDeviceFeature1')}</ThemedText>
+              <ThemedText style={styles.modeFeature}>• {t('games.oneWordUnites.singleDeviceFeature2')}</ThemedText>
+              <ThemedText style={styles.modeFeature}>• {t('games.oneWordUnites.singleDeviceFeature3')}</ThemedText>
             </ThemedView>
           </TouchableOpacity>
 
           {/* Multi Device Mode */}
-          <TouchableOpacity 
-            style={[styles.modeCard, { backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF' }]}
-            onPress={handleMultiDeviceMode}
-            activeOpacity={0.8}
+          <ThemedView 
+            style={[
+              styles.modeCard, 
+              styles.disabledCard,
+              { 
+                backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6',
+                opacity: 0.6
+              }
+            ]}
           >
             <ThemedView style={styles.modeHeader}>
-              <Ionicons name="phone-portrait-outline" size={32} color={colors.tint} />
-              <ThemedText style={styles.modeTitle}>Multi Device</ThemedText>
+              <Ionicons name="phone-portrait-outline" size={32} color="#9CA3AF" />
+              <ThemedView style={styles.modeTitleContainer}>
+                <ThemedText style={[styles.modeTitle, styles.disabledText]}>{t('games.oneWordUnites.multiDevice')}</ThemedText>
+                <ThemedText style={styles.comingSoonText}>({t('games.oneWordUnites.comingSoon')})</ThemedText>
+              </ThemedView>
             </ThemedView>
-            <ThemedText style={styles.modeDescription}>
-              Each player uses their own device! Real-time synchronization and automatic scoring.
+            <ThemedText style={[styles.modeDescription, styles.disabledText]}>
+              {t('games.oneWordUnites.multiDeviceDesc')}
             </ThemedText>
             <ThemedView style={styles.modeFeatures}>
-              <ThemedText style={styles.modeFeature}>• Automatic scoring</ThemedText>
-              <ThemedText style={styles.modeFeature}>• Real-time synchronization</ThemedText>
-              <ThemedText style={styles.modeFeature}>• Host controls</ThemedText>
+              <ThemedText style={[styles.modeFeature, styles.disabledText]}>• {t('games.oneWordUnites.multiDeviceFeature1')}</ThemedText>
+              <ThemedText style={[styles.modeFeature, styles.disabledText]}>• {t('games.oneWordUnites.multiDeviceFeature2')}</ThemedText>
+              <ThemedText style={[styles.modeFeature, styles.disabledText]}>• {t('games.oneWordUnites.multiDeviceFeature3')}</ThemedText>
             </ThemedView>
-          </TouchableOpacity>
+          </ThemedView>
         </ThemedView>
       </ScrollView>
     </ThemedView>
@@ -146,8 +119,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: 16,
-    marginBottom: 20,
+    paddingTop: 16,
   },
   backButton: {
     padding: 8,
@@ -178,6 +150,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
     marginBottom: 8,
+    paddingVertical: 8
   },
   gameSubtitle: {
     fontSize: 16,
@@ -245,5 +218,23 @@ const styles = StyleSheet.create({
   modeFeature: {
     fontSize: 14,
     opacity: 0.7,
+  },
+  disabledCard: {
+    opacity: 0.6,
+  },
+  modeTitleContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 4,
+    backgroundColor: 'transparent',
+  },
+  disabledText: {
+    opacity: 0.6,
+  },
+  comingSoonText: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    fontStyle: 'italic',
+    marginTop: 2,
   },
 }); 

@@ -8,7 +8,7 @@
 
 export const Config = {
   // === UPDATE THIS URL WHEN CHANGING NETWORKS ===
-  API_BASE_URL: 'http://192.168.100.85:5400/api',
+  API_BASE_URL: 'http://localhost:5400/api',
   
   // Alternative configurations (uncomment the one you need):
   // API_BASE_URL: 'http://localhost:5400/api', // For web development

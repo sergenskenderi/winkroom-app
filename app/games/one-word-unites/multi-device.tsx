@@ -468,6 +468,8 @@ export default function MultiDeviceGameScreen() {
                 onSubmitEditing={addPlayer}
                 returnKeyType="done"
                 blurOnSubmit={false}
+                autoCapitalize="words"
+                autoCorrect={false}
               />
               <TouchableOpacity 
                 style={[styles.addButton, { backgroundColor: colors.tint }]}
