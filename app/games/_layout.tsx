@@ -29,6 +29,10 @@ export default function GamesLayout() {
         options={{ headerShown: false, presentation: 'card' }} 
       />
       <Stack.Screen 
+        name="charades" 
+        options={{ headerShown: false, presentation: 'card' }} 
+      />
+      <Stack.Screen 
         name="suspect" 
         options={{ 
           headerShown: false,

@@ -10,7 +10,7 @@ import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-nat
 const GAMES = [
   { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1' },
   { id: 'guess-the-paint', route: '/games/mafia-role-assignment', icon: 'color-palette' as const, accent: '#8B5CF6' },
-  { id: 'fool-dance', route: null, icon: 'musical-notes' as const, accent: '#10B981' },
+  { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981' },
 ];
 
 export default function GamesScreen() {
