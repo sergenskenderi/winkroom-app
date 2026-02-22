@@ -2,7 +2,7 @@ import { Stack } from 'expo-router';
 
 export default function GamesLayout() {
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen 
         name="one-word-unites" 
         options={{ 
@@ -23,6 +23,10 @@ export default function GamesLayout() {
           headerShown: false,
           presentation: 'card'
         }} 
+      />
+      <Stack.Screen 
+        name="mafia-role-assignment" 
+        options={{ headerShown: false, presentation: 'card' }} 
       />
       <Stack.Screen 
         name="suspect" 
