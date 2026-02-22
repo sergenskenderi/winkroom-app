@@ -9,6 +9,9 @@ export default {
     loading: 'Yükleniyor…',
     error: 'Hata',
     close: 'Kapat',
+    connectionError: 'Bağlantı başarısız',
+    connectionErrorHint: 'Lütfen internete bağlanıp tekrar deneyin.',
+    retry: 'Tekrar Dene',
   },
   games: {
     title: 'Oyunlar',
@@ -182,7 +185,7 @@ export default {
       addPoints: 'Puan ekle',
       points: 'puan',
       currentWord: 'Mevcut kelime',
-      tapToSeeWord: 'Kelimeni görmek için dokun (sadece oyuncu)',
+      tapToSeeWord: 'Kelimeni görmek için dokun',
       nextWord: 'Sonraki kelime',
       timer: 'Zamanlayıcı',
       setTime: 'Süre (saniye)',

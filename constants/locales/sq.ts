@@ -9,6 +9,9 @@ export default {
     loading: 'Duke u ngarkuar…',
     error: 'Gabim',
     close: 'Mbyll',
+    connectionError: 'Lidhja dështoi',
+    connectionErrorHint: 'Ju lutemi lidhuni me internetin dhe provoni përsëri.',
+    retry: 'Provo përsëri',
   },
   games: {
     title: 'Lojëra',
@@ -182,7 +185,7 @@ export default {
       addPoints: 'Shto pikë',
       points: 'pikë',
       currentWord: 'Fjala aktuale',
-      tapToSeeWord: 'Prek për të parë fjalën tënde (vetëm aktori)',
+      tapToSeeWord: 'Prek për të parë fjalën tënde',
       nextWord: 'Fjala tjetër',
       timer: 'Kohëmatës',
       setTime: 'Koha (sekonda)',

@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
 // import { AuthProvider } from '@/contexts/AuthContext'; // Temporarily disabled
+import { BackendConnectionProvider } from '@/contexts/BackendConnectionContext';
 import { I18nProvider } from '@/contexts/I18nContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
@@ -20,8 +21,9 @@ export default function RootLayout() {
 
   return (
     <I18nProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack>
+      <BackendConnectionProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           {/* Auth screens temporarily disabled - will be re-enabled later */}
           {/* <Stack.Screen name="auth" options={{ headerShown: false }} /> */}
@@ -29,8 +31,9 @@ export default function RootLayout() {
           <Stack.Screen name="settings" options={{ headerShown: false }} />
           <Stack.Screen name="+not-found" />
         </Stack>
-        <StatusBar style="auto" />
-      </ThemeProvider>
+          <StatusBar style="auto" />
+        </ThemeProvider>
+      </BackendConnectionProvider>
     </I18nProvider>
   );
 }

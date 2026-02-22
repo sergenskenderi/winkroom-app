@@ -12,8 +12,12 @@ interface WordPairsResponse {
 }
 
 export async function fetchWordPairs(limit = 20, locale = 'en'): Promise<WordPair[]> {
-  const res = await apiService.get<WordPairsResponse>(`/games/words/pairs?limit=${limit}&locale=${encodeURIComponent(locale)}`);
-  return res?.data ?? [];
+  try {
+    const res = await apiService.get<WordPairsResponse>(`/games/words/pairs?limit=${limit}&locale=${encodeURIComponent(locale)}`);
+    return res?.data ?? [];
+  } catch {
+    return [];
+  }
 }
 
 export interface WordPairUsage {
@@ -23,5 +27,7 @@ export interface WordPairUsage {
 
 export async function reportWordPairUsage(usages: WordPairUsage[]): Promise<void> {
   if (usages.length === 0) return;
-  await apiService.post('/games/words/pairs/usage', { usages });
+  try {
+    await apiService.post('/games/words/pairs/usage', { usages });
+  } catch (_) {}
 }

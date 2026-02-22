@@ -9,6 +9,9 @@ export default {
     loading: 'Loading…',
     error: 'Error',
     close: 'Close',
+    connectionError: 'Connection failed',
+    connectionErrorHint: 'Please connect to the internet and try again.',
+    retry: 'Retry',
   },
   games: {
     title: 'Games',

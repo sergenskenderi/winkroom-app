@@ -9,6 +9,10 @@
 export const Config = {
   // === UPDATE THIS URL WHEN CHANGING NETWORKS ===
   API_BASE_URL: 'http://localhost:5400/api',
+  getHealthUrl: () => {
+    const base = Config.API_BASE_URL.replace(/\/api\/?$/, '') || Config.API_BASE_URL;
+    return `${base}/health`;
+  },
   
   // Alternative configurations (uncomment the one you need):
   // API_BASE_URL: 'http://localhost:5400/api', // For web development

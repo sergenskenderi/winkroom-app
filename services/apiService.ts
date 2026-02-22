@@ -26,8 +26,21 @@ class ApiService {
     return headers;
   }
 
-  // Generic GET request
-  async get<T>(endpoint: string, customHeaders?: Record<string, string>): Promise<T> {
+  async checkBackend(): Promise<boolean> {
+    const url = Config.getHealthUrl();
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), Math.min(this.timeout, 8000));
+    try {
+      const res = await fetch(url, { method: 'GET', signal: controller.signal });
+      clearTimeout(timeoutId);
+      return res.ok;
+    } catch {
+      clearTimeout(timeoutId);
+      return false;
+    }
+  }
+
+  async get<T>(endpoint: string, customHeaders?: Record<string, string>): Promise<T | null> {
     const url = `${this.baseURL}${endpoint}`;
     const headers = await this.createHeaders(customHeaders);
 
@@ -44,12 +57,14 @@ class ApiService {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
+        if (response.status === 404) return null;
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
+      if ((error as Error).message?.startsWith('HTTP error')) throw error;
       console.error('GET request error:', error);
       throw error;
     }

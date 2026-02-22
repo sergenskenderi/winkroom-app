@@ -37,12 +37,17 @@ export function translate(
   key: string,
   params?: Record<string, string | number>
 ): string {
-  const map = LOCALES[locale] ?? LOCALES.en;
-  let out = getNested(map as Record<string, unknown>, key) ?? getNested(LOCALES.en as Record<string, unknown>, key) ?? key;
-  if (params) {
-    Object.entries(params).forEach(([k, v]) => {
-      out = out.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), String(v));
-    });
+  try {
+    const map = LOCALES[locale] ?? LOCALES.en;
+    let out = getNested(map as Record<string, unknown>, key) ?? getNested(LOCALES.en as Record<string, unknown>, key) ?? key;
+    out = typeof out === 'string' ? out : key;
+    if (params) {
+      Object.entries(params).forEach(([k, v]) => {
+        out = out.replace(new RegExp(`\\{\\{${k}\\}\\}`, 'g'), String(v));
+      });
+    }
+    return out;
+  } catch {
+    return key;
   }
-  return out;
 }

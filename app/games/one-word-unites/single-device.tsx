@@ -1646,17 +1646,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     opacity: 0.8,
   },
-  timerProgressBar: {
-    width: '100%',
-    height: 12,
-    backgroundColor: '#E5E7EB',
-    borderRadius: 6,
-    overflow: 'hidden',
-  },
-  timerProgressFill: {
-    height: '100%',
-    borderRadius: 6,
-  },
   timerControls: {
     flexDirection: 'row',
     justifyContent: 'center',

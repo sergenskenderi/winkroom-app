@@ -9,6 +9,9 @@ export default {
     loading: 'Caricamento…',
     error: 'Errore',
     close: 'Chiudi',
+    connectionError: 'Connessione fallita',
+    connectionErrorHint: 'Connettiti a Internet e riprova.',
+    retry: 'Riprova',
   },
   games: {
     title: 'Giochi',
@@ -182,7 +185,7 @@ export default {
       addPoints: 'Aggiungi punti',
       points: 'pt',
       currentWord: 'Parola attuale',
-      tapToSeeWord: 'Tocca per vedere la tua parola (solo l\'attore)',
+      tapToSeeWord: 'Tocca per vedere la tua parola',
       nextWord: 'Prossima parola',
       timer: 'Timer',
       setTime: 'Tempo (secondi)',
