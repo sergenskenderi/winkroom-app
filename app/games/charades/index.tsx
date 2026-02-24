@@ -372,7 +372,6 @@ export default function CharadesScreen() {
             <Ionicons name="arrow-back" size={24} color={colors.tint} />
           </TouchableOpacity>
           <ThemedView style={styles.headerContent}>
-            <Ionicons name="musical-notes" size={24} color={colors.tint} />
             <ThemedText style={styles.headerTitle}>{t('games.charades.currentWord')}</ThemedText>
           </ThemedView>
           <View style={styles.placeholder} />
