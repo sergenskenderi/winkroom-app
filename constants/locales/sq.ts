@@ -108,6 +108,7 @@ export default {
       viewingAgain: 'Prek Përfundova kur mbaron. Ky shikim do llogaritet.',
       tapToReveal: 'Prek për të zbuluar',
       tapToHide: 'Prek për të fshehur',
+      getAnotherWord: 'Fjalë tjetër',
     },
     mafia: {
       rulesTitle: 'Rregullat e lojës',
@@ -185,7 +186,9 @@ export default {
       addPoints: 'Shto pikë',
       points: 'pikë',
       currentWord: 'Fjala aktuale',
+      tapToGetWord: 'Prek për një fjalë të rastësishme',
       tapToSeeWord: 'Prek për të parë fjalën tënde',
+      tapToHideBeforePass: 'Prek për të fshehur para se t\'ia kalosh ekipit tjetër',
       nextWord: 'Fjala tjetër',
       timer: 'Kohëmatës',
       setTime: 'Koha (sekonda)',

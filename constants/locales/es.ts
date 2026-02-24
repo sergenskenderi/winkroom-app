@@ -108,6 +108,7 @@ export default {
       viewingAgain: 'Toca Hecho al terminar. Esta vista se contará.',
       tapToReveal: 'Toca para revelar',
       tapToHide: 'Toca para ocultar',
+      getAnotherWord: 'Otra palabra',
     },
     mafia: {
       rulesTitle: 'Reglas del juego',
@@ -185,7 +186,9 @@ export default {
       addPoints: 'Añadir puntos',
       points: 'pts',
       currentWord: 'Palabra actual',
+      tapToGetWord: 'Toca para una palabra al azar',
       tapToSeeWord: 'Toca para ver tu palabra',
+      tapToHideBeforePass: 'Toca para ocultar antes de pasar al siguiente equipo',
       nextWord: 'Siguiente palabra',
       timer: 'Temporizador',
       setTime: 'Tiempo (segundos)',

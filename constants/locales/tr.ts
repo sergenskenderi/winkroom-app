@@ -108,6 +108,7 @@ export default {
       viewingAgain: 'Bitirdiğinde Tamam\'a dokun. Bu görüntüleme sayılacak.',
       tapToReveal: 'Göstermek için dokun',
       tapToHide: 'Gizlemek için dokun',
+      getAnotherWord: 'Başka kelime al',
     },
     mafia: {
       rulesTitle: 'Oyun Kuralları',
@@ -185,7 +186,9 @@ export default {
       addPoints: 'Puan ekle',
       points: 'puan',
       currentWord: 'Mevcut kelime',
+      tapToGetWord: 'Rastgele kelime için dokun',
       tapToSeeWord: 'Kelimeni görmek için dokun',
+      tapToHideBeforePass: 'Sonraki takıma vermeden önce gizlemek için dokun',
       nextWord: 'Sonraki kelime',
       timer: 'Zamanlayıcı',
       setTime: 'Süre (saniye)',

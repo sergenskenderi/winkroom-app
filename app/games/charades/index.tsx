@@ -10,7 +10,6 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   Alert,
-  Modal,
   ScrollView,
   StyleSheet,
   TextInput,
@@ -49,7 +48,6 @@ export default function CharadesScreen() {
   const [playerTeam, setPlayerTeam] = useState<Record<string, 0 | 1>>({});
   const [teamScores, setTeamScores] = useState<[number, number]>([0, 0]);
   const [currentWord, setCurrentWord] = useState('');
-  const [showWordModal, setShowWordModal] = useState(false);
   const [isWordRevealed, setIsWordRevealed] = useState(false);
   const [timerDuration, setTimerDuration] = useState(60);
   const [timerRemaining, setTimerRemaining] = useState(60);
@@ -124,17 +122,16 @@ export default function CharadesScreen() {
     const list = words.length > 0 ? words : CHARADES_WORDS;
     const word = list[Math.floor(Math.random() * list.length)];
     setCurrentWord(word);
-  };
-
-  const openWordReveal = () => {
-    if (!currentWord) pickWord();
     setIsWordRevealed(false);
-    setShowWordModal(true);
   };
 
-  const closeWordReveal = () => {
-    setShowWordModal(false);
-    setCurrentWord('');
+  const onWordCardPress = () => {
+    if (!currentWord) {
+      pickWord();
+      setIsWordRevealed(true);
+    } else {
+      setIsWordRevealed((r) => !r);
+    }
   };
 
   const addScore = (teamIndex: 0 | 1, points: number) => {
@@ -380,9 +377,18 @@ export default function CharadesScreen() {
           </ThemedView>
           <View style={styles.placeholder} />
         </ThemedView>
-        <TouchableOpacity style={[styles.wordCard, { backgroundColor: cardBg, borderColor: border }]} onPress={openWordReveal}>
-          <ThemedText style={[styles.wordText, { color: colors.text }]}>{'••••••'}</ThemedText>
-          <ThemedText style={[styles.hint, { color: colors.text }]}>{t('games.charades.tapToSeeWord')}</ThemedText>
+        <TouchableOpacity style={[styles.wordCard, { backgroundColor: cardBg, borderColor: border }]} onPress={onWordCardPress} activeOpacity={0.8}>
+          <ThemedText style={[styles.wordText, { color: colors.text }]}>
+            {!currentWord ? t('games.charades.tapToGetWord') : isWordRevealed ? currentWord : '••••••'}
+          </ThemedText>
+          <ThemedText style={[styles.hint, { color: colors.text }]}>
+            {!currentWord ? '' : isWordRevealed ? t('games.charades.tapToHideBeforePass') : t('games.charades.tapToSeeWord')}
+          </ThemedText>
+          {currentWord ? (
+            <TouchableOpacity style={[styles.nextWordLink, { borderColor: colors.tint }]} onPress={pickWord}>
+              <ThemedText style={[styles.nextWordLinkText, { color: colors.tint }]}>{t('games.charades.nextWord')}</ThemedText>
+            </TouchableOpacity>
+          ) : null}
         </TouchableOpacity>
         <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor: border }]}>
           <ThemedView style={styles.cardHeader}>
@@ -458,25 +464,6 @@ export default function CharadesScreen() {
       {currentStep === 'players' && renderPlayers()}
       {currentStep === 'teams' && renderTeams()}
       {currentStep === 'game' && renderGame()}
-
-      <Modal visible={showWordModal} transparent animationType="fade">
-        <ThemedView style={styles.modalOverlay}>
-          <ThemedView style={[styles.modalContent, { backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF' }]}>
-            <ThemedText style={styles.modalTitle}>{t('games.oneWordUnites.yourWordIs')}</ThemedText>
-            <TouchableOpacity style={styles.wordRevealBox} onPress={() => setIsWordRevealed(!isWordRevealed)} activeOpacity={0.8}>
-              <ThemedText style={styles.wordRevealText}>
-                {isWordRevealed ? currentWord : '••••••'}
-              </ThemedText>
-              <ThemedText style={styles.wordRevealHint}>
-                {isWordRevealed ? t('games.oneWordUnites.tapToHide') : t('games.oneWordUnites.tapToReveal')}
-              </ThemedText>
-            </TouchableOpacity>
-            <TouchableOpacity style={[styles.modalButton, { backgroundColor: colors.tint }]} onPress={closeWordReveal}>
-              <ThemedText style={styles.modalButtonText}>{t('games.oneWordUnites.gotTheWord')}</ThemedText>
-            </TouchableOpacity>
-          </ThemedView>
-        </ThemedView>
-      </Modal>
     </ThemedView>
   );
 }
@@ -502,7 +489,7 @@ const styles = StyleSheet.create({
   addRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
   input: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 },
   addBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
-  hint: { fontSize: 15, textAlign: 'center', marginTop: 8 },
+  hint: { fontSize: 15, lineHeight: 22, textAlign: 'center', marginTop: 8 },
   playerList: { gap: 8 },
   playerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 8 },
   playerName: { fontSize: 16, fontWeight: '500' },
@@ -519,8 +506,10 @@ const styles = StyleSheet.create({
   teamChipText: { fontSize: 14, fontWeight: '600' },
   regenerateButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10 },
   regenerateButtonText: { fontSize: 16, fontWeight: '600' },
-  wordCard: { padding: 28, borderRadius: 16, borderWidth: 1, marginBottom: 20, alignItems: 'center' },
-  wordText: { fontSize: 28, fontWeight: 'bold', marginBottom: 8 },
+  wordCard: { paddingVertical: 32, paddingHorizontal: 28, borderRadius: 16, borderWidth: 1, marginBottom: 20, alignItems: 'center', justifyContent: 'center' },
+  wordText: { fontSize: 28, fontWeight: 'bold', lineHeight: 36, marginBottom: 8, textAlign: 'center' },
+  nextWordLink: { marginTop: 12, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2 },
+  nextWordLinkText: { fontSize: 15, fontWeight: '600' },
   timerChipsRow: { flexDirection: 'row', gap: 10, marginBottom: 8 },
   timerChip: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
   timerChipText: { fontSize: 15, fontWeight: '600' },
@@ -542,12 +531,4 @@ const styles = StyleSheet.create({
   scoreMinusBtn: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   scorePlusBtn: { width: 44, height: 44, borderRadius: 22, alignItems: 'center', justifyContent: 'center' },
   teamScoreValue: { fontSize: 22, fontWeight: 'bold', minWidth: 36, textAlign: 'center' },
-  modalOverlay: { flex: 1, backgroundColor: 'rgba(0,0,0,0.5)', justifyContent: 'center', alignItems: 'center', padding: 24 },
-  modalContent: { width: '100%', maxWidth: 340, borderRadius: 16, padding: 24, alignItems: 'center' },
-  modalTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 16, textAlign: 'center' },
-  wordRevealBox: { width: '100%', padding: 24, borderRadius: 12, backgroundColor: 'rgba(0,0,0,0.06)', alignItems: 'center', marginBottom: 20 },
-  wordRevealText: { fontSize: 22, fontWeight: '700', marginBottom: 8 },
-  wordRevealHint: { fontSize: 13, opacity: 0.7 },
-  modalButton: { width: '100%', paddingVertical: 14, borderRadius: 12, alignItems: 'center' },
-  modalButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
 });

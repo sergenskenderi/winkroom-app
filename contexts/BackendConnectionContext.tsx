@@ -1,12 +1,5 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  Modal,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
+import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 import { useTranslation } from '@/contexts/I18nContext';
 import { apiService } from '@/services/apiService';
 
@@ -35,25 +28,17 @@ export function BackendConnectionProvider({ children }: { children: React.ReactN
     await check();
   }, [check]);
 
-  const showBlock = status === 'failed' || status === 'checking';
-
   return (
     <BackendConnectionContext.Provider value={{ status, retry }}>
       {children}
-      <Modal visible={showBlock} transparent animationType="fade">
+      <Modal visible={status === 'failed'} transparent animationType="fade">
         <View style={styles.overlay}>
           <View style={styles.box}>
-            {status === 'checking' ? (
-              <ActivityIndicator size="large" />
-            ) : (
-              <>
-                <Text style={styles.title}>{t('common.connectionError')}</Text>
-                <Text style={styles.hint}>{t('common.connectionErrorHint')}</Text>
-                <Pressable style={styles.button} onPress={retry}>
-                  <Text style={styles.buttonText}>{t('common.retry')}</Text>
-                </Pressable>
-              </>
-            )}
+            <Text style={styles.title}>{t('common.connectionError')}</Text>
+            <Text style={styles.hint}>{t('common.connectionErrorHint')}</Text>
+            <Pressable style={styles.button} onPress={retry}>
+              <Text style={styles.buttonText}>{t('common.retry')}</Text>
+            </Pressable>
           </View>
         </View>
       </Modal>

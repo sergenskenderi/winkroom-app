@@ -108,6 +108,7 @@ export default {
       viewingAgain: 'Tippe auf Fertig. Dieser Aufruf wird gezählt.',
       tapToReveal: 'Tippen zum Anzeigen',
       tapToHide: 'Tippen zum Verbergen',
+      getAnotherWord: 'Anderes Wort',
     },
     mafia: {
       rulesTitle: 'Spielregeln',
@@ -185,7 +186,9 @@ export default {
       addPoints: 'Punkte hinzufügen',
       points: 'Pkt',
       currentWord: 'Aktuelles Wort',
+      tapToGetWord: 'Tippen für ein zufälliges Wort',
       tapToSeeWord: 'Tippen, um dein Wort zu sehen',
+      tapToHideBeforePass: 'Tippen zum Verbergen, bevor du das Gerät weitergibst',
       nextWord: 'Nächstes Wort',
       timer: 'Timer',
       setTime: 'Zeit (Sekunden)',

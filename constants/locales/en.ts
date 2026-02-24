@@ -108,6 +108,7 @@ export default {
       viewingAgain: 'Tap Done when finished. This view will be counted.',
       tapToReveal: 'Tap to reveal',
       tapToHide: 'Tap to hide',
+      getAnotherWord: 'Get another word',
     },
     mafia: {
       rulesTitle: 'Game Rules',
@@ -185,7 +186,9 @@ export default {
       addPoints: 'Add points',
       points: 'pts',
       currentWord: 'Current word',
-      tapToSeeWord: 'Tap to generate a random word',
+      tapToGetWord: 'Tap to generate a random word',
+      tapToSeeWord: 'Tap to see your word',
+      tapToHideBeforePass: 'Tap to hide before passing to the next team',
       nextWord: 'Next word',
       timer: 'Timer',
       setTime: 'Set time (seconds)',

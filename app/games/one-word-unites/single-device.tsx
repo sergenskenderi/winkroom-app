@@ -282,6 +282,17 @@ export default function SingleDeviceGameScreen() {
     setShowWordModal(false);
   };
 
+  const regenerateRoundWords = async () => {
+    const fresh = await fetchWordPairs(1, locale);
+    const pair = fresh[0] ?? wordPairs[Math.floor(Math.random() * wordPairs.length)] ?? currentWordPair;
+    setCurrentWordPair(pair);
+    setPlayers(prev => prev.map(p => ({
+      ...p,
+      word: p.isImposter ? pair.imposter : pair.normal,
+    })));
+    setIsWordRevealed(false);
+  };
+
   const nextPlayer = () => {
     // Always finish the round and go to voting, regardless of current player
     // Stop the timer when entering voting phase
@@ -1162,6 +1173,14 @@ export default function SingleDeviceGameScreen() {
                 ? t('games.oneWordUnites.viewingAgain')
                 : t('games.oneWordUnites.readThenConfirm')}
             </ThemedText>
+            <TouchableOpacity
+              style={[styles.modalButtonSecondary, { borderColor: colors.tint }]}
+              onPress={regenerateRoundWords}
+            >
+              <ThemedText style={[styles.modalButtonTextSecondary, { color: colors.tint }]}>
+                {t('games.oneWordUnites.getAnotherWord')}
+              </ThemedText>
+            </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.modalButton, { backgroundColor: colors.tint }]}
               onPress={confirmWordRead}
@@ -1985,6 +2004,17 @@ const styles = StyleSheet.create({
   },
   modalButtonText: {
     color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  modalButtonSecondary: {
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 8,
+    borderWidth: 2,
+    marginBottom: 10,
+  },
+  modalButtonTextSecondary: {
     fontSize: 16,
     fontWeight: '600',
   },
