@@ -1,17 +1,20 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import { useTranslation } from '@/contexts/I18nContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
+import { fetchWordPairs } from '@/services/wordsService';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
-    Alert,
-    Modal,
-    ScrollView,
-    StyleSheet,
-    TextInput,
-    TouchableOpacity
+  Alert,
+  Modal,
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 interface Player {
@@ -42,7 +45,7 @@ interface GameState {
   gameId: string;
 }
 
-const SAMPLE_WORDS = [
+const FALLBACK_WORDS = [
   { normal: 'Pizza', imposter: 'Burger' },
   { normal: 'Ocean', imposter: 'Mountain' },
   { normal: 'Coffee', imposter: 'Tea' },
@@ -57,6 +60,8 @@ export default function MultiDeviceGameScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
+  const { locale } = useTranslation();
+  const [wordPairs, setWordPairs] = useState<{ normal: string; imposter: string }[]>(FALLBACK_WORDS);
   const [gameState, setGameState] = useState<GameState>({
     currentStep: 'lobby',
     currentRound: 1,
@@ -72,7 +77,7 @@ export default function MultiDeviceGameScreen() {
     startingPlayer: '',
   });
   const [players, setPlayers] = useState<Player[]>([]);
-  const [currentWordPair, setCurrentWordPair] = useState(SAMPLE_WORDS[0]);
+  const [currentWordPair, setCurrentWordPair] = useState(FALLBACK_WORDS[0]);
   const [showWordModal, setShowWordModal] = useState(false);
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [newPlayerName, setNewPlayerName] = useState('');
@@ -212,33 +217,40 @@ export default function MultiDeviceGameScreen() {
     ));
   };
 
-  const startGame = () => {
+  const startGame = async () => {
     if (players.length < 3) {
       Alert.alert('Not Enough Players', 'You need at least 3 players to start the game.');
       return;
     }
-    
     if (!players.every(p => p.isReady)) {
       Alert.alert('Not All Players Ready', 'All players must be ready to start the game.');
       return;
     }
-    
-    // Assign words to players
+    let pairs = FALLBACK_WORDS;
+    try {
+      const fetched = await fetchWordPairs(gameSettings.rounds, locale);
+      if (fetched.length > 0) {
+        pairs = fetched;
+        setWordPairs(fetched);
+      }
+    } catch {
+      setWordPairs(FALLBACK_WORDS);
+    }
+    const firstPair = pairs[0];
+    setCurrentWordPair(firstPair);
     const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
     const imposterIndex = Math.floor(Math.random() * shuffledPlayers.length);
-    
     const updatedPlayers = shuffledPlayers.map((player, index) => ({
       ...player,
-      word: index === imposterIndex ? currentWordPair.imposter : currentWordPair.normal,
+      word: index === imposterIndex ? firstPair.imposter : firstPair.normal,
       isImposter: index === imposterIndex,
       position: index,
     }));
-    
     setPlayers(updatedPlayers);
-    setGameState(prev => ({ 
-      ...prev, 
+    setGameState(prev => ({
+      ...prev,
       currentStep: 'wordAssignment',
-      timeRemaining: gameSettings.clueTime 
+      timeRemaining: gameSettings.clueTime,
     }));
   };
 
@@ -319,8 +331,7 @@ export default function MultiDeviceGameScreen() {
         timeRemaining: gameSettings.clueTime
       }));
       
-      // Reset players and assign new words
-      const newWordPair = SAMPLE_WORDS[gameState.currentRound % SAMPLE_WORDS.length];
+      const newWordPair = wordPairs[gameState.currentRound % wordPairs.length];
       setCurrentWordPair(newWordPair);
       
       const shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
@@ -451,50 +462,32 @@ export default function MultiDeviceGameScreen() {
 
           <ThemedView style={styles.section}>
             <ThemedText style={styles.sectionTitle}>Players</ThemedText>
-            
-            <ThemedView style={styles.addPlayerContainer}>
+            <View style={styles.addRow}>
               <TextInput
-                style={[styles.textInput, { 
-                  color: colors.text, 
-                  backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6',
-                  borderColor: colorScheme === 'dark' ? '#4B5563' : '#D1D5DB',
-                  flex: 1,
-                  marginRight: 8
-                }]}
+                style={[styles.input, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6', color: colors.text }]}
+                placeholder="Enter player name"
+                placeholderTextColor="#9CA3AF"
                 value={newPlayerName}
                 onChangeText={setNewPlayerName}
-                placeholder="Enter player name"
-                placeholderTextColor={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
                 onSubmitEditing={addPlayer}
-                returnKeyType="done"
                 blurOnSubmit={false}
-                autoCapitalize="words"
-                autoCorrect={false}
               />
-              <TouchableOpacity 
-                style={[styles.addButton, { backgroundColor: colors.tint }]}
-                onPress={addPlayer}
-                activeOpacity={0.8}
-              >
-                <Ionicons name="add" size={20} color="#FFFFFF" />
+              <TouchableOpacity style={[styles.addBtn, { backgroundColor: colors.tint }]} onPress={addPlayer}>
+                <Ionicons name="add" size={24} color="#FFFFFF" />
               </TouchableOpacity>
-            </ThemedView>
-
+            </View>
             {players.map((player) => (
-              <ThemedView key={player.id} style={styles.playerItem}>
+              <View key={player.id} style={[styles.playerRow, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6' }]}>
                 <ThemedView style={styles.playerInfo}>
-                  <ThemedText style={styles.playerName}>{player.name}</ThemedText>
-                  <ThemedText style={styles.playerStatus}>
+                  <ThemedText style={[styles.playerName, { color: colors.text }]}>{player.name}</ThemedText>
+                  <ThemedText style={[styles.playerStatus, { color: colors.text }]}>
                     {player.isReady ? 'Ready ✓' : 'Not Ready'}
                   </ThemedText>
                 </ThemedView>
-                <TouchableOpacity 
-                  style={styles.removeButton}
-                  onPress={() => removePlayer(player.id)}
-                >
-                  <Ionicons name="close" size={20} color="#EF4444" />
+                <TouchableOpacity onPress={() => removePlayer(player.id)} hitSlop={12}>
+                  <Ionicons name="close-circle" size={24} color="#EF4444" />
                 </TouchableOpacity>
-              </ThemedView>
+              </View>
             ))}
           </ThemedView>
 
@@ -921,28 +914,10 @@ const styles = StyleSheet.create({
     opacity: 0.7,
     textAlign: 'center',
   },
-  addPlayerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  addButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  playerItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    backgroundColor: '#F3F4F6',
-    borderRadius: 8,
-    marginBottom: 8,
-  },
+  addRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
+  input: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 },
+  addBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  playerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 8, marginBottom: 8 },
   playerInfo: {
     flex: 1,
   },

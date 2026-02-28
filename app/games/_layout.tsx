@@ -40,7 +40,7 @@ export default function GamesLayout() {
         }} 
       />
       <Stack.Screen 
-        name="synonyms" 
+        name="synonyms/index" 
         options={{ headerShown: false, presentation: 'card' }} 
       />
     </Stack>

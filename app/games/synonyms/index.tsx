@@ -84,9 +84,11 @@ export default function SynonymsScreen() {
   wordIndexRef.current = wordIndex;
 
   useEffect(() => {
+    let cancelled = false;
     fetchCharadesWords(150, locale).then((list) => {
-      if (list.length > 0) setWords(list);
+      if (!cancelled && list.length > 0) setWords(list);
     });
+    return () => { cancelled = true; };
   }, [locale]);
 
   useEffect(() => {
@@ -495,6 +497,7 @@ export default function SynonymsScreen() {
             value={newPlayerName}
             onChangeText={setNewPlayerName}
             onSubmitEditing={addPlayer}
+            blurOnSubmit={false}
           />
           <TouchableOpacity style={[styles.addBtn, { backgroundColor: colors.tint }]} onPress={addPlayer}>
             <Ionicons name="add" size={24} color="#FFFFFF" />
@@ -818,6 +821,7 @@ export default function SynonymsScreen() {
               {(() => {
                 const ranked = [...players].sort((a, b) => (playerScores[b.id] ?? 0) - (playerScores[a.id] ?? 0));
                 const winner = ranked[0];
+                const cardBg = colorScheme === 'dark' ? '#1F2937' : '#F9FAFB';
                 const getRankStyle = (index: number) => {
                   if (index === 0) return { bg: '#FEF3C7', border: '#F59E0B', icon: 'trophy' as const };
                   if (index === 1) return { bg: '#E5E7EB', border: '#9CA3AF', icon: 'medal' as const };
@@ -844,7 +848,7 @@ export default function SynonymsScreen() {
                       const rankStyle = getRankStyle(index);
                       const pts = playerScores[player.id] ?? 0;
                       return (
-                        <ThemedView key={player.id} style={[styles.finalRowCard, { backgroundColor: cardBg, borderColor: border }]}>
+                        <ThemedView key={player.id} style={[styles.finalRowCard, { backgroundColor: cardBg, borderColor: rankStyle.border }]}>
                           <ThemedView style={[styles.finalRankBadge, { backgroundColor: rankStyle.bg, borderColor: rankStyle.border }]}>
                             {rankStyle.icon === 'trophy' ? (
                               <Ionicons name="trophy" size={18} color="#B45309" />
@@ -900,7 +904,7 @@ const styles = StyleSheet.create({
   rulesCard: { padding: 20, borderRadius: 16, borderWidth: 1, marginBottom: 24 },
   rulesCardTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 16 },
   rulesText: { fontSize: 15, lineHeight: 22, opacity: 0.95 },
-  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)' },
+  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)', backgroundColor: 'transparent' },
   rulesSectionTitle: { fontSize: 17, fontWeight: '600', marginBottom: 10 },
   primaryButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, paddingHorizontal: 24, borderRadius: 12, marginBottom: 32 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
@@ -968,4 +972,23 @@ const styles = StyleSheet.create({
   feedbackScreenFull: { position: 'absolute', top: -80, left: 0, right: 0, bottom: 0, zIndex: 100 },
   landscapeOverlay: { position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, zIndex: 10, justifyContent: 'center', alignItems: 'center', padding: 24 },
   finalBackButton: { marginTop: 24 },
+  finalHeroCard: { alignItems: 'center', padding: 24, borderRadius: 16, borderWidth: 1, marginBottom: 20 },
+  finalHeroIconWrap: { width: 64, height: 64, borderRadius: 32, alignItems: 'center', justifyContent: 'center', marginBottom: 12 },
+  finalHeroTitle: { fontSize: 20, fontWeight: 'bold', marginBottom: 4 },
+  finalHeroSubtitle: { fontSize: 15, opacity: 0.9 },
+  finalWinnerCard: { alignItems: 'center', padding: 20, borderRadius: 16, borderWidth: 2, marginBottom: 16 },
+  finalWinnerCrown: { marginBottom: 8 },
+  finalWinnerLabel: { fontSize: 14, fontWeight: '600', marginBottom: 8, opacity: 0.9 },
+  finalWinnerAvatar: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center', marginBottom: 8 },
+  finalWinnerInitial: { fontSize: 24, fontWeight: 'bold', color: '#FFFFFF' },
+  finalWinnerName: { fontSize: 18, fontWeight: '600', marginBottom: 4 },
+  finalWinnerPoints: { fontSize: 16, fontWeight: '600', color: '#F59E0B' },
+  finalStandingsTitle: { fontSize: 17, fontWeight: '600', marginBottom: 12 },
+  finalRowCard: { flexDirection: 'row', alignItems: 'center', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 12, borderWidth: 1, marginBottom: 8, gap: 12 },
+  finalRankBadge: { width: 32, height: 32, borderRadius: 16, borderWidth: 1, alignItems: 'center', justifyContent: 'center' },
+  finalRankNumber: { fontSize: 14, fontWeight: '700' },
+  finalRowAvatar: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  finalRowInitial: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
+  finalRowName: { flex: 1, fontSize: 16, fontWeight: '500' },
+  finalRowPoints: { fontSize: 15, fontWeight: '600' },
 });

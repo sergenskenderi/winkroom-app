@@ -12,7 +12,8 @@ import {
   ScrollView,
   StyleSheet,
   TextInput,
-  TouchableOpacity
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { useTranslation } from '@/contexts/I18nContext';
 import { fetchWordPairs, reportWordPairUsage, type WordPair as ApiWordPair, type WordPairUsage } from '@/services/wordsService';
@@ -282,17 +283,6 @@ export default function SingleDeviceGameScreen() {
     setShowWordModal(false);
   };
 
-  const regenerateRoundWords = async () => {
-    const fresh = await fetchWordPairs(1, locale);
-    const pair = fresh[0] ?? wordPairs[Math.floor(Math.random() * wordPairs.length)] ?? currentWordPair;
-    setCurrentWordPair(pair);
-    setPlayers(prev => prev.map(p => ({
-      ...p,
-      word: p.isImposter ? pair.imposter : pair.normal,
-    })));
-    setIsWordRevealed(false);
-  };
-
   const nextPlayer = () => {
     // Always finish the round and go to voting, regardless of current player
     // Stop the timer when entering voting phase
@@ -432,68 +422,37 @@ export default function SingleDeviceGameScreen() {
         </ThemedView>
         <ThemedView style={styles.placeholder} />
       </ThemedView>
+      <ThemedText style={[styles.subtitle, { color: colors.text }]}>{t('games.oneWordUnites.playersCount', { count: players.length })}</ThemedText>
       <ThemedView style={[styles.playersCard, { 
         backgroundColor: colorScheme === 'dark' ? '#1F2937' : '#FFFFFF',
         borderColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB'
       }]}>
-        <ThemedView style={styles.cardHeader}>
-          <Ionicons name="people" size={24} color={colors.tint} />
-          <ThemedText style={styles.cardTitle}>{t('games.oneWordUnites.playersCount', { count: players.length })}</ThemedText>
-        </ThemedView>
-        <ThemedView style={styles.addPlayerContainer}>
+        <View style={styles.addRow}>
           <TextInput
             ref={playerNameInputRef}
-            style={[styles.textInput, { 
-              color: colors.text, 
-              backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6',
-              borderColor: colorScheme === 'dark' ? '#4B5563' : '#D1D5DB',
-              flex: 1,
-              marginRight: 12
-            }]}
+            style={[styles.input, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6', color: colors.text }]}
+            placeholder={t('games.oneWordUnites.enterPlayerName')}
+            placeholderTextColor="#9CA3AF"
             value={newPlayerName}
             onChangeText={setNewPlayerName}
-            placeholder={t('games.oneWordUnites.enterPlayerName')}
-            placeholderTextColor={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
             onSubmitEditing={addPlayer}
-            returnKeyType="done"
             blurOnSubmit={false}
-            autoCapitalize="words"
-            autoCorrect={false}
           />
-          <TouchableOpacity 
-            style={[styles.addButton, { backgroundColor: colors.tint }]}
-            onPress={addPlayer}
-          >
-            <Ionicons name="add" size={20} color="#FFFFFF" />
+          <TouchableOpacity style={[styles.addBtn, { backgroundColor: colors.tint }]} onPress={addPlayer}>
+            <Ionicons name="add" size={24} color="#FFFFFF" />
           </TouchableOpacity>
-        </ThemedView>
-        {players.length === 0 ? (
-          <ThemedView style={styles.emptyPlayers}>
-            <Ionicons name="people-outline" size={48} color={colorScheme === 'dark' ? '#6B7280' : '#9CA3AF'} />
-            <ThemedText style={[styles.emptyPlayersText, { color: colorScheme === 'dark' ? '#6B7280' : '#9CA3AF' }]}>
-              {t('games.oneWordUnites.addAtLeast3')}
-            </ThemedText>
-          </ThemedView>
-        ) : (
-          <ThemedView style={styles.playersList}>
-            {players.map((player) => (
-              <ThemedView key={player.id} style={[styles.playerItem, { 
-                backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6',
-                borderColor: colorScheme === 'dark' ? '#4B5563' : '#D1D5DB'
-              }]}>
-                <ThemedView style={styles.playerInfo}>
-                  <ThemedView style={[styles.playerAvatar, { backgroundColor: colors.tint }]}>
-                    <ThemedText style={styles.playerInitial}>{player.name.charAt(0).toUpperCase()}</ThemedText>
-                  </ThemedView>
-                  <ThemedText style={[styles.playerName, { color: colors.text }]}>{player.name}</ThemedText>
-                </ThemedView>
-                <TouchableOpacity style={styles.removeButton} onPress={() => removePlayer(player.id)}>
-                  <Ionicons name="close-circle" size={24} color="#EF4444" />
-                </TouchableOpacity>
-              </ThemedView>
-            ))}
-          </ThemedView>
-        )}
+        </View>
+        <ThemedText style={[styles.hint, { color: colors.text }]}>{t('games.oneWordUnites.addAtLeast3')}</ThemedText>
+        <View style={styles.playerList}>
+          {players.map((p) => (
+            <View key={p.id} style={[styles.playerRow, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6' }]}>
+              <ThemedText style={[styles.playerName, { color: colors.text }]}>{p.name}</ThemedText>
+              <TouchableOpacity onPress={() => removePlayer(p.id)} hitSlop={12}>
+                <Ionicons name="close-circle" size={24} color="#EF4444" />
+              </TouchableOpacity>
+            </View>
+          ))}
+        </View>
       </ThemedView>
       <TouchableOpacity 
         style={[
@@ -1173,14 +1132,6 @@ export default function SingleDeviceGameScreen() {
                 ? t('games.oneWordUnites.viewingAgain')
                 : t('games.oneWordUnites.readThenConfirm')}
             </ThemedText>
-            <TouchableOpacity
-              style={[styles.modalButtonSecondary, { borderColor: colors.tint }]}
-              onPress={regenerateRoundWords}
-            >
-              <ThemedText style={[styles.modalButtonTextSecondary, { color: colors.tint }]}>
-                {t('games.oneWordUnites.getAnotherWord')}
-              </ThemedText>
-            </TouchableOpacity>
             <TouchableOpacity 
               style={[styles.modalButton, { backgroundColor: colors.tint }]}
               onPress={confirmWordRead}
@@ -1275,6 +1226,13 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
   },
+  subtitle: { fontSize: 15, marginBottom: 20, opacity: 0.8 },
+  addRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
+  input: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 },
+  addBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
+  hint: { fontSize: 15, lineHeight: 22, textAlign: 'center', marginTop: 8 },
+  playerList: { gap: 8 },
+  playerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingVertical: 12, paddingHorizontal: 16, borderRadius: 8 },
   rulesCard: {
     marginBottom: 20,
     padding: 20,
@@ -1386,6 +1344,7 @@ const styles = StyleSheet.create({
   roundsTimeCardHeader: {
     alignItems: 'center',
     marginBottom: 24,
+    backgroundColor: 'transparent',
   },
   roundsTimeIconWrap: {
     width: 56,
@@ -1408,6 +1367,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     gap: 16,
+    backgroundColor: 'transparent',
   },
   roundsTimeStepperBtn: {
     width: 52,
@@ -1436,6 +1396,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     gap: 10,
     marginBottom: 20,
+    backgroundColor: 'transparent',
   },
   roundsTimeChip: {
     paddingVertical: 12,
@@ -2099,6 +2060,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
     paddingVertical: 8,
+    backgroundColor: 'transparent',
   },
   scoringSummaryRowLast: {
     borderTopWidth: 1,
@@ -2144,6 +2106,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 14,
     gap: 12,
+    backgroundColor: 'transparent',
   },
   scoringPlayerAvatar: {
     width: 44,
@@ -2161,6 +2124,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
+    backgroundColor: 'transparent',
   },
   scoringPointChip: {
     minWidth: 48,

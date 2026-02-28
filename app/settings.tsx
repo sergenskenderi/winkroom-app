@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 12,
     marginBottom: 16,
+    backgroundColor: 'transparent',
   },
   sectionTitle: {
     fontSize: 18,
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
   },
   localeList: {
     gap: 4,
+    backgroundColor: 'transparent',
   },
   localeRow: {
     flexDirection: 'row',

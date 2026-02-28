@@ -55,9 +55,11 @@ export default function CharadesScreen() {
   const [randomSplit, setRandomSplit] = useState<[string[], string[]]>([[], []]);
 
   useEffect(() => {
+    let cancelled = false;
     fetchCharadesWords(50, locale).then((list) => {
-      if (list.length > 0) setWords(list);
+      if (!cancelled && list.length > 0) setWords(list);
     });
+    return () => { cancelled = true; };
   }, [locale]);
 
   useEffect(() => {
@@ -249,6 +251,7 @@ export default function CharadesScreen() {
               value={newPlayerName}
               onChangeText={setNewPlayerName}
               onSubmitEditing={addPlayer}
+              blurOnSubmit={false}
             />
             <TouchableOpacity style={[styles.addBtn, { backgroundColor: colors.tint }]} onPress={addPlayer}>
               <Ionicons name="add" size={24} color="#FFFFFF" />
@@ -392,7 +395,7 @@ export default function CharadesScreen() {
         <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor: border }]}>
           <ThemedView style={styles.cardHeader}>
             <Ionicons name="time" size={24} color={timerColor} />
-            <ThemedText style={[styles.cardTitle, { color: timerColor }]}>{t('games.charades.timer')}</ThemedText>
+            <ThemedText style={[styles.cardHeaderTitle, { color: timerColor }]}>{t('games.charades.timer')}</ThemedText>
           </ThemedView>
           <View style={styles.timerChipsRow}>
             {TIMER_PRESETS.map((sec) => (
@@ -478,13 +481,14 @@ const styles = StyleSheet.create({
   rulesCard: { padding: 20, borderRadius: 16, borderWidth: 1, marginBottom: 24 },
   rulesCardTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 16 },
   rulesText: { fontSize: 15, lineHeight: 22, opacity: 0.95 },
-  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)' },
+  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)', backgroundColor: 'transparent' },
   rulesSectionTitle: { fontSize: 17, fontWeight: '600', marginBottom: 10 },
   primaryButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, paddingHorizontal: 24, borderRadius: 12, marginBottom: 32 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
   card: { padding: 20, borderRadius: 16, borderWidth: 1, marginBottom: 20 },
   cardTitle: { fontSize: 18, fontWeight: 'bold', marginBottom: 16 },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12, backgroundColor: 'transparent' },
+  cardHeaderTitle: { fontSize: 18, fontWeight: 'bold' },
   addRow: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
   input: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 12, fontSize: 16 },
   addBtn: { width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' },
@@ -514,8 +518,8 @@ const styles = StyleSheet.create({
   timerChipText: { fontSize: 15, fontWeight: '600' },
   timerCustomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, marginVertical: 16, paddingVertical: 8 },
   timerNumBtn: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  timerDisplay: { alignItems: 'center' },
-  timerDisplayLarge: { flexDirection: 'row', alignItems: 'center', minWidth: 100, minHeight: 64, justifyContent: 'center' },
+  timerDisplay: { alignItems: 'center' , backgroundColor: 'transparent' },
+  timerDisplayLarge: { flexDirection: 'row', alignItems: 'center', minWidth: 100, minHeight: 64, justifyContent: 'center', backgroundColor: 'transparent' },
   timerText: { fontSize: 48, fontWeight: 'bold', minWidth: 72, lineHeight: 56 },
   timerSecondsLabel: { fontSize: 28, fontWeight: '600', marginLeft: 2, lineHeight: 34 },
   timerProgressBar: { height: 8, borderRadius: 4, overflow: 'hidden', marginBottom: 16 },

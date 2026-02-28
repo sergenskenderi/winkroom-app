@@ -231,6 +231,7 @@ export default function MafiaRoleAssignmentScreen() {
             placeholderTextColor={colorScheme === 'dark' ? '#9CA3AF' : '#6B7280'}
             onSubmitEditing={addPlayer}
             returnKeyType="done"
+            blurOnSubmit={false}
           />
           <TouchableOpacity style={[styles.addBtn, { backgroundColor: colors.tint }]} onPress={addPlayer}>
             <Ionicons name="add" size={20} color="#FFFFFF" />
@@ -412,7 +413,7 @@ export default function MafiaRoleAssignmentScreen() {
         <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor: border }]}>
           <ThemedView style={styles.cardHeader}>
             <Ionicons name="shuffle" size={24} color={colors.tint} />
-            <ThemedText style={[styles.cardTitle, { color: colors.text }]}>{t('games.mafia.randomSelector')}</ThemedText>
+            <ThemedText style={[styles.cardHeaderTitle, { color: colors.text }]}>{t('games.mafia.randomSelector')}</ThemedText>
           </ThemedView>
           <ThemedText style={[styles.hint, { color: colors.text }]}>{t('games.mafia.tapToPickRandom')}</ThemedText>
           <TouchableOpacity
@@ -431,7 +432,7 @@ export default function MafiaRoleAssignmentScreen() {
         <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor: border }]}>
           <ThemedView style={styles.cardHeader}>
             <Ionicons name="time" size={24} color={timerColor} />
-            <ThemedText style={[styles.cardTitle, { color: timerColor }]}>{t('games.mafia.timer')}</ThemedText>
+            <ThemedText style={[styles.cardHeaderTitle, { color: timerColor }]}>{t('games.mafia.timer')}</ThemedText>
           </ThemedView>
           <ThemedText style={[styles.hint, { color: colors.text, marginBottom: 12 }]}>{t('games.mafia.setTime')}</ThemedText>
           <View style={styles.timerChipsRow}>
@@ -556,10 +557,10 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 20, fontWeight: 'bold' },
   placeholder: { width: 40 },
   rulesCard: { padding: 20, borderRadius: 16, borderWidth: 1, marginBottom: 24 },
-  rulesCardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16 },
+  rulesCardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 16, backgroundColor: 'transparent' },
   rulesCardTitle: { fontSize: 18, fontWeight: 'bold' },
   rulesText: { fontSize: 15, lineHeight: 22, opacity: 0.95 },
-  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)' },
+  rulesSection: { marginTop: 20, paddingTop: 16, borderTopWidth: 1, borderTopColor: 'rgba(128,128,128,0.25)', backgroundColor: 'transparent' },
   rulesSectionTitle: { fontSize: 17, fontWeight: '600', marginBottom: 10 },
   primaryButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 16, paddingHorizontal: 24, borderRadius: 12, marginBottom: 32 },
   primaryButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '600' },
@@ -597,7 +598,8 @@ const styles = StyleSheet.create({
   roleRevealText: { fontSize: 20, fontWeight: '700', marginBottom: 8 },
   roleRevealHint: { fontSize: 13, opacity: 0.7 },
   modalHint: { fontSize: 14, marginBottom: 20, textAlign: 'center' },
-  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12 },
+  cardHeader: { flexDirection: 'row', alignItems: 'center', gap: 12, marginBottom: 12, backgroundColor: 'transparent' },
+  cardHeaderTitle: { fontSize: 18, fontWeight: 'bold' },
   randomButton: { padding: 20, borderRadius: 12, alignItems: 'center' },
   randomButtonLabel: { fontSize: 14, opacity: 0.8, marginBottom: 4 },
   randomButtonName: { fontSize: 22, fontWeight: 'bold' },
@@ -606,8 +608,8 @@ const styles = StyleSheet.create({
   timerChipText: { fontSize: 15, fontWeight: '600' },
   timerCustomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, marginVertical: 16, paddingVertical: 8 },
   timerNumBtn: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  timerDisplay: { alignItems: 'center' },
-  timerDisplayLarge: { flexDirection: 'row', alignItems: 'center', minWidth: 100, minHeight: 64, justifyContent: 'center' },
+  timerDisplay: { alignItems: 'center', backgroundColor: 'transparent' },
+  timerDisplayLarge: { flexDirection: 'row', alignItems: 'center', minWidth: 100, minHeight: 64, justifyContent: 'center', backgroundColor: 'transparent' },
   timerText: { fontSize: 48, fontWeight: 'bold', minWidth: 72, lineHeight: 56 },
   timerSecondsLabel: { fontSize: 28, fontWeight: '600', marginLeft: 2, lineHeight: 34 },
   timerProgressBar: { height: 8, borderRadius: 4, overflow: 'hidden', marginBottom: 16 },

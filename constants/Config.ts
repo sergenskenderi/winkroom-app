@@ -8,7 +8,7 @@
 
 export const Config = {
   // === UPDATE THIS URL WHEN CHANGING NETWORKS ===
-  API_BASE_URL: 'http://192.168.31.71:5400/api',
+  API_BASE_URL: 'http://192.168.1.132:5400/api',
   getHealthUrl: () => {
     const base = Config.API_BASE_URL.replace(/\/api\/?$/, '') || Config.API_BASE_URL;
     return `${base}/health`;

@@ -58,14 +58,22 @@ class ApiService {
 
       if (!response.ok) {
         if (response.status === 404) return null;
-        throw new Error(`HTTP error! status: ${response.status}`);
+        const body = await response.text();
+        const err = new Error(`HTTP error! status: ${response.status}`);
+        (err as Error & { url?: string; status?: number; body?: string }).url = url;
+        (err as Error & { url?: string; status?: number; body?: string }).status = response.status;
+        (err as Error & { url?: string; status?: number; body?: string }).body = body;
+        console.error('GET failed:', url, response.status, body?.slice(0, 200));
+        throw err;
       }
 
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
       if ((error as Error).message?.startsWith('HTTP error')) throw error;
-      console.error('GET request error:', error);
+      if ((error as Error).name !== 'AbortError') {
+        console.error('GET request error:', (error as Error).message, 'URL:', url);
+      }
       throw error;
     }
   }
@@ -95,7 +103,7 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      console.error('POST request error:', error);
+      if ((error as Error).name !== 'AbortError') console.error('POST request error:', error);
       throw error;
     }
   }
@@ -125,7 +133,7 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      console.error('PUT request error:', error);
+      if ((error as Error).name !== 'AbortError') console.error('PUT request error:', error);
       throw error;
     }
   }
@@ -154,7 +162,7 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      console.error('DELETE request error:', error);
+      if ((error as Error).name !== 'AbortError') console.error('DELETE request error:', error);
       throw error;
     }
   }
@@ -189,7 +197,7 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      console.error('File upload error:', error);
+      if ((error as Error).name !== 'AbortError') console.error('File upload error:', error);
       throw error;
     }
   }
