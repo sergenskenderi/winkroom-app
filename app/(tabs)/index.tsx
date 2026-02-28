@@ -11,6 +11,7 @@ const GAMES = [
   { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1' },
   { id: 'guess-the-paint', route: '/games/mafia-role-assignment', icon: 'color-palette' as const, accent: '#8B5CF6' },
   { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981' },
+  { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B' },
 ];
 
 export default function GamesScreen() {

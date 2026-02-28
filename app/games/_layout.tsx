@@ -39,6 +39,10 @@ export default function GamesLayout() {
           presentation: 'card'
         }} 
       />
+      <Stack.Screen 
+        name="synonyms" 
+        options={{ headerShown: false, presentation: 'card' }} 
+      />
     </Stack>
   );
 } 

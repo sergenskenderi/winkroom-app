@@ -200,7 +200,7 @@ export default function CharadesScreen() {
           </TouchableOpacity>
           <ThemedView style={styles.headerContent}>
             <Ionicons name="document-text" size={24} color={colors.tint} />
-            <ThemedText style={styles.headerTitle}>{t('games.charades.rulesTitle')}</ThemedText>
+            <ThemedText style={[styles.headerTitle, { color: colors.text }]}>{t('games.charades.rulesTitle')}</ThemedText>
           </ThemedView>
           <View style={styles.placeholder} />
         </ThemedView>
@@ -326,10 +326,10 @@ export default function CharadesScreen() {
             {players.map((p) => (
               <View key={p.id} style={styles.teamAssignRow}>
                 <ThemedText style={[styles.playerName, { color: colors.text, flex: 1 }]}>{p.name}</ThemedText>
-                <TouchableOpacity style={[styles.teamChip, (playerTeam[p.id] ?? -1) === 0 && { backgroundColor: colors.tint }]} onPress={() => setTeamForPlayer(p.id, 0)}>
+                <TouchableOpacity style={[styles.teamChip, { backgroundColor: (playerTeam[p.id] ?? -1) === 0 ? colors.tint : (colorScheme === 'dark' ? '#374151' : '#F3F4F6') }]} onPress={() => setTeamForPlayer(p.id, 0)}>
                   <ThemedText style={[styles.teamChipText, { color: (playerTeam[p.id] ?? -1) === 0 ? '#FFF' : colors.text }]}>{teamNames[0]}</ThemedText>
                 </TouchableOpacity>
-                <TouchableOpacity style={[styles.teamChip, (playerTeam[p.id] ?? -1) === 1 && { backgroundColor: colors.tint }]} onPress={() => setTeamForPlayer(p.id, 1)}>
+                <TouchableOpacity style={[styles.teamChip, { backgroundColor: (playerTeam[p.id] ?? -1) === 1 ? colors.tint : (colorScheme === 'dark' ? '#374151' : '#F3F4F6') }]} onPress={() => setTeamForPlayer(p.id, 1)}>
                   <ThemedText style={[styles.teamChipText, { color: (playerTeam[p.id] ?? -1) === 1 ? '#FFF' : colors.text }]}>{teamNames[1]}</ThemedText>
                 </TouchableOpacity>
               </View>
@@ -501,12 +501,12 @@ const styles = StyleSheet.create({
   teamNameRow: { flexDirection: 'row', gap: 12 },
   teamNameInput: { flex: 1, borderWidth: 1, borderRadius: 8, paddingHorizontal: 12, paddingVertical: 10, fontSize: 16 },
   teamAssignRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginBottom: 10 },
-  teamChip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8, backgroundColor: '#E5E7EB' },
+  teamChip: { paddingVertical: 8, paddingHorizontal: 14, borderRadius: 8 },
   teamChipText: { fontSize: 14, fontWeight: '600' },
   regenerateButton: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, paddingHorizontal: 16, borderRadius: 10 },
   regenerateButtonText: { fontSize: 16, fontWeight: '600' },
   wordCard: { paddingVertical: 32, paddingHorizontal: 28, borderRadius: 16, borderWidth: 1, marginBottom: 20, alignItems: 'center', justifyContent: 'center' },
-  wordText: { fontSize: 28, fontWeight: 'bold', lineHeight: 36, marginBottom: 8, textAlign: 'center' },
+  wordText: { fontSize: 44, fontWeight: 'bold', lineHeight: 52, marginBottom: 8, textAlign: 'center' },
   nextWordLink: { marginTop: 12, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2 },
   nextWordLinkText: { fontSize: 15, fontWeight: '600' },
   timerChipsRow: { flexDirection: 'row', gap: 10, marginBottom: 8 },

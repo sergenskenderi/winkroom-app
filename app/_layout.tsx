@@ -4,35 +4,39 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
 
-// import { AuthProvider } from '@/contexts/AuthContext'; // Temporarily disabled
 import { BackendConnectionProvider } from '@/contexts/BackendConnectionContext';
 import { I18nProvider } from '@/contexts/I18nContext';
+import { ThemeProvider as AppThemeProvider } from '@/contexts/ThemeContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
-export default function RootLayout() {
+function LayoutContent() {
   const colorScheme = useColorScheme();
+  return (
+    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <Stack>
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="games" options={{ headerShown: false }} />
+        <Stack.Screen name="settings" options={{ headerShown: false }} />
+        <Stack.Screen name="+not-found" />
+      </Stack>
+      <StatusBar style="auto" />
+    </ThemeProvider>
+  );
+}
+
+export default function RootLayout() {
   const [loaded] = useFonts({
     SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
   });
 
-  if (!loaded) {
-    return null;
-  }
+  if (!loaded) return null;
 
   return (
     <I18nProvider>
       <BackendConnectionProvider>
-        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-          <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          {/* Auth screens temporarily disabled - will be re-enabled later */}
-          {/* <Stack.Screen name="auth" options={{ headerShown: false }} /> */}
-          <Stack.Screen name="games" options={{ headerShown: false }} />
-          <Stack.Screen name="settings" options={{ headerShown: false }} />
-          <Stack.Screen name="+not-found" />
-        </Stack>
-          <StatusBar style="auto" />
-        </ThemeProvider>
+        <AppThemeProvider>
+          <LayoutContent />
+        </AppThemeProvider>
       </BackendConnectionProvider>
     </I18nProvider>
   );

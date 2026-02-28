@@ -2,6 +2,7 @@ import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from '@/contexts/I18nContext';
+import { useTheme } from '@/contexts/ThemeContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
@@ -10,13 +11,22 @@ import { type LocaleCode } from '@/constants/locales';
 
 const LOCALE_OPTIONS: LocaleCode[] = ['en', 'tr', 'it', 'de', 'fr', 'es', 'sq'];
 
+const THEME_OPTIONS: Array<'light' | 'dark' | 'system'> = ['light', 'dark', 'system'];
+
 export default function SettingsScreen() {
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
   const { t, locale, setLocale, localeNames } = useTranslation();
+  const { themePreference, setThemePreference } = useTheme();
   const cardBg = colorScheme === 'dark' ? '#1F2937' : '#FFFFFF';
   const cardBorder = colorScheme === 'dark' ? '#374151' : '#E5E7EB';
+
+  const themeLabel = (value: 'light' | 'dark' | 'system') => {
+    if (value === 'light') return t('home.themeLight');
+    if (value === 'dark') return t('home.themeDark');
+    return t('home.themeSystem');
+  };
 
   return (
     <ThemedView style={styles.container}>
@@ -28,6 +38,27 @@ export default function SettingsScreen() {
         <ThemedView style={styles.placeholder} />
       </ThemedView>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+        <ThemedView style={[styles.section, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+          <ThemedView style={styles.sectionHeader}>
+            <Ionicons name="sunny" size={24} color={colors.tint} />
+            <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>{t('home.theme')}</ThemedText>
+          </ThemedView>
+          <ThemedView style={styles.localeList}>
+            {THEME_OPTIONS.map((value) => (
+              <TouchableOpacity
+                key={value}
+                style={[styles.localeRow, themePreference === value && { backgroundColor: colors.tint + '20' }]}
+                onPress={() => setThemePreference(value)}
+                activeOpacity={0.7}
+              >
+                <ThemedText style={[styles.localeName, { color: colors.text }]}>{themeLabel(value)}</ThemedText>
+                {themePreference === value && (
+                  <Ionicons name="checkmark-circle" size={24} color={colors.tint} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </ThemedView>
+        </ThemedView>
         <ThemedView style={[styles.section, { backgroundColor: cardBg, borderColor: cardBorder }]}>
           <ThemedView style={styles.sectionHeader}>
             <Ionicons name="language" size={24} color={colors.tint} />
