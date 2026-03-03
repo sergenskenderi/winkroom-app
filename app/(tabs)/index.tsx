@@ -12,6 +12,7 @@ const GAMES = [
   { id: 'guess-the-paint', route: '/games/mafia-role-assignment', icon: 'color-palette' as const, accent: '#8B5CF6' },
   { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981' },
   { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B' },
+  { id: 'wrong-answers-only', route: '/games/wrong-answers-only', icon: 'help-buoy' as const, accent: '#EC4899' },
 ];
 
 export default function GamesScreen() {

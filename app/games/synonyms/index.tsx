@@ -3,7 +3,7 @@ import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
 import { useTranslation } from '@/contexts/I18nContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
-import { fetchCharadesWords } from '@/services/charadesWordsService';
+import { fetchCharadesWordItems, reportCharadesWordUsage } from '@/services/charadesWordsService';
 import { Ionicons } from '@expo/vector-icons';
 import { Accelerometer } from 'expo-sensors';
 import * as Haptics from 'expo-haptics';
@@ -80,15 +80,29 @@ export default function SynonymsScreen() {
   const accelRef = useRef({ x: 0, y: 0, z: 0 });
   const turnWordsRef = useRef<string[]>([]);
   const wordIndexRef = useRef(0);
+  const wordIdByTextRef = useRef<Record<string, string>>({});
+  const usedWordIdsRef = useRef<Set<string>>(new Set());
   turnWordsRef.current = turnWords;
   wordIndexRef.current = wordIndex;
 
   useEffect(() => {
     let cancelled = false;
-    fetchCharadesWords(150, locale).then((list) => {
-      if (!cancelled && list.length > 0) setWords(list);
+    fetchCharadesWordItems(150, locale).then((items) => {
+      if (cancelled || !items || items.length === 0) return;
+      const nextWords = items.map((item) => item.word);
+      const map: Record<string, string> = {};
+      items.forEach((item) => {
+        if (item.word && item.id && !map[item.word]) {
+          map[item.word] = item.id;
+        }
+      });
+      if (cancelled) return;
+      wordIdByTextRef.current = map;
+      setWords(nextWords);
     });
-    return () => { cancelled = true; };
+    return () => {
+      cancelled = true;
+    };
   }, [locale]);
 
   useEffect(() => {
@@ -204,6 +218,10 @@ export default function SynonymsScreen() {
       word: w,
       guessed: turnResults.some((r) => r.word === w && r.guessed),
     }));
+    fullResults.forEach((r) => {
+      const id = wordIdByTextRef.current[r.word];
+      if (id) usedWordIdsRef.current.add(id);
+    });
     setTurnResults(fullResults);
     const points = fullResults.filter((r) => r.guessed).length;
     const player = players[currentPlayerIndex];
@@ -264,6 +282,10 @@ export default function SynonymsScreen() {
           guessed: turnResults.some((r) => r.word === w && r.guessed),
         }));
         setTurnResults(fullResults);
+        fullResults.forEach((r) => {
+          const id = wordIdByTextRef.current[r.word];
+          if (id) usedWordIdsRef.current.add(id);
+        });
         const points = fullResults.filter((r) => r.guessed).length;
         const player = players[currentPlayerIndex];
         if (player) {
@@ -326,10 +348,24 @@ export default function SynonymsScreen() {
   const countdownRef = useRef(3);
   const startTurn = useCallback(() => {
     didFinishTurnRef.current = false;
-    const pool = words.length > 0 ? words : FALLBACK_WORDS;
-    const shuffled = [...pool].sort(() => Math.random() - 0.5);
-    const first = shuffled[0] ?? FALLBACK_WORDS[0];
-    wordPoolRef.current = { list: shuffled, index: 1 };
+    const poolWords = words.length > 0 ? words : FALLBACK_WORDS;
+    if (!wordPoolRef.current.list.length || wordPoolRef.current.index >= wordPoolRef.current.list.length) {
+      const shuffled = [...poolWords].sort(() => Math.random() - 0.5);
+      wordPoolRef.current.list = shuffled;
+      wordPoolRef.current.index = 0;
+    }
+    const first = wordPoolRef.current.list[wordPoolRef.current.index];
+    if (!first) {
+      setTurnWords([]);
+      setWordIndex(0);
+      setTurnResults([]);
+      setTimerRemaining(roundTime);
+      countdownRef.current = 3;
+      setCountdown(3);
+      setGamePhase('countdown');
+      return;
+    }
+    wordPoolRef.current.index += 1;
     setTurnWords([first]);
     setWordIndex(0);
     setTurnResults([]);
@@ -407,6 +443,8 @@ export default function SynonymsScreen() {
         setPlayerTeam(next);
       }
     }
+    wordPoolRef.current = { list: [], index: 0 };
+    usedWordIdsRef.current = new Set();
     setCurrentRound(1);
     setCurrentPlayerIndex(0);
     setTeamScores([0, 0]);
@@ -416,6 +454,8 @@ export default function SynonymsScreen() {
   };
 
   const confirmStartFromRounds = () => {
+    wordPoolRef.current = { list: [], index: 0 };
+    usedWordIdsRef.current = new Set();
     setCurrentRound(1);
     setCurrentPlayerIndex(0);
     setTeamScores([0, 0]);
@@ -433,6 +473,10 @@ export default function SynonymsScreen() {
       setCurrentPlayerIndex(0);
       startTurn();
     } else {
+      const ids = Array.from(usedWordIdsRef.current);
+      if (ids.length > 0) {
+        reportCharadesWordUsage(ids).catch(() => {});
+      }
       setGamePhase('gameOver');
     }
   };

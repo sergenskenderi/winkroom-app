@@ -43,6 +43,10 @@ export default function GamesLayout() {
         name="synonyms/index" 
         options={{ headerShown: false, presentation: 'card' }} 
       />
+      <Stack.Screen 
+        name="wrong-answers-only/index" 
+        options={{ headerShown: false, presentation: 'card' }} 
+      />
     </Stack>
   );
 } 
