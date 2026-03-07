@@ -61,6 +61,7 @@ export default function WrongAnswersOnlyScreen() {
     index: 0,
   });
   const usedQuestionIdsRef = useRef<Set<string>>(new Set());
+  const reportedIdsRef = useRef<Set<string>>(new Set());
   const [currentQuestion, setCurrentQuestion] = useState<QuestionItem | null>(null);
 
   const [currentAskerIndex, setCurrentAskerIndex] = useState(0);
@@ -68,6 +69,11 @@ export default function WrongAnswersOnlyScreen() {
   const [numberOfRounds, setNumberOfRounds] = useState(2);
   const [currentAnswerIndex, setCurrentAnswerIndex] = useState(0);
   const [scores, setScores] = useState<Record<string, number>>({});
+  const [timePerPerson, setTimePerPerson] = useState(30);
+  const [timeRemaining, setTimeRemaining] = useState(30);
+  const timerFiredRef = useRef(false);
+  const handleAnswerRef = useRef<(c: boolean) => void>(() => {});
+  const goToRoundSummaryRef = useRef(() => {});
 
   useEffect(() => {
     let cancelled = false;
@@ -95,10 +101,34 @@ export default function WrongAnswersOnlyScreen() {
 
   useEffect(() => {
     if (phase !== 'final') return;
-    const ids = Array.from(usedQuestionIdsRef.current);
+    const ids = Array.from(reportedIdsRef.current);
     if (ids.length === 0) return;
     reportWrongAnswerQuestionUsage(ids).catch(() => {});
   }, [phase]);
+
+  useEffect(() => {
+    if (phase === 'asking') {
+      timerFiredRef.current = false;
+      setTimeRemaining(timePerPerson);
+    }
+  }, [phase, currentAskerIndex, timePerPerson]);
+
+  useEffect(() => {
+    if (phase !== 'asking' || timePerPerson <= 0) return;
+    const id = setInterval(() => {
+      setTimeRemaining((prev) => {
+        if (prev <= 1) {
+          if (!timerFiredRef.current) {
+            timerFiredRef.current = true;
+            goToRoundSummaryRef.current();
+          }
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [phase, currentAskerIndex, timePerPerson]);
 
   const handleBack = () => {
     if (step === 'rules') {
@@ -126,6 +156,7 @@ export default function WrongAnswersOnlyScreen() {
             setScores({});
             setCurrentQuestion(null);
             usedQuestionIdsRef.current = new Set();
+            reportedIdsRef.current = new Set();
           },
         },
       ]
@@ -157,11 +188,8 @@ export default function WrongAnswersOnlyScreen() {
   };
 
   const ensureQuestionPool = () => {
-    if (
-      !questionPoolRef.current.list.length ||
-      questionPoolRef.current.index >= questionPoolRef.current.list.length
-    ) {
-      const base = questions.length > 0 ? questions : FALLBACK_QUESTIONS;
+    const base = questions.length > 0 ? questions : FALLBACK_QUESTIONS;
+    if (!questionPoolRef.current.list.length || questionPoolRef.current.list.length !== base.length) {
       const shuffled = [...base].sort(() => Math.random() - 0.5);
       questionPoolRef.current.list = shuffled;
       questionPoolRef.current.index = 0;
@@ -171,10 +199,32 @@ export default function WrongAnswersOnlyScreen() {
   const pickNextQuestion = () => {
     ensureQuestionPool();
     const pool = questionPoolRef.current;
-    const next = pool.list[pool.index];
-    pool.index += 1;
+    const used = usedQuestionIdsRef.current;
+    let next: QuestionItem | null = null;
+    let attempts = 0;
+    const maxAttempts = pool.list.length + 1;
+    while (attempts < maxAttempts) {
+      if (pool.index >= pool.list.length) {
+        const allUsed = pool.list.every((q) => q.id && used.has(q.id));
+        if (allUsed && pool.list.length > 0) {
+          used.clear();
+          pool.list = [...pool.list].sort(() => Math.random() - 0.5);
+        }
+        pool.index = 0;
+      }
+      const candidate = pool.list[pool.index];
+      pool.index += 1;
+      if (candidate && (!candidate.id || !used.has(candidate.id))) {
+        next = candidate;
+        break;
+      }
+      attempts += 1;
+    }
     setCurrentQuestion(next ?? null);
-    if (next?.id) usedQuestionIdsRef.current.add(next.id);
+    if (next?.id) {
+      used.add(next.id);
+      reportedIdsRef.current.add(next.id);
+    }
   };
 
   const startGame = () => {
@@ -191,6 +241,7 @@ export default function WrongAnswersOnlyScreen() {
     setCurrentAnswerIndex(0);
     setPhase('askerIntro');
     usedQuestionIdsRef.current = new Set();
+    reportedIdsRef.current = new Set();
     setStep('game');
   };
 
@@ -222,14 +273,15 @@ export default function WrongAnswersOnlyScreen() {
         [answerPlayer.id]: (prev[answerPlayer.id] ?? 0) + 1,
       }));
     }
-    const nextAnswerIndex = currentAnswerIndex + 1;
-    if (nextAnswerIndex < order.length) {
-      setCurrentAnswerIndex(nextAnswerIndex);
-      pickNextQuestion();
-      return;
+    pickNextQuestion();
+    if (players.length > 2) {
+      setCurrentAnswerIndex((i) => (i + 1) % order.length);
     }
-    setPhase('roundSummary');
   };
+  handleAnswerRef.current = handleAnswer;
+
+  const goToRoundSummary = () => setPhase('roundSummary');
+  goToRoundSummaryRef.current = goToRoundSummary;
 
   const panResponder = useRef(
     PanResponder.create({
@@ -398,6 +450,35 @@ export default function WrongAnswersOnlyScreen() {
             ))}
           </View>
         </ThemedView>
+        <ThemedView style={[styles.card, { backgroundColor: cardBg, borderColor: border, marginTop: 16 }]}>
+          <ThemedText style={[styles.sectionLabel, { color: colors.text }]}>
+            {t('games.wrongAnswers.timePerQuestionLabel')}
+          </ThemedText>
+          <View style={styles.roundsRow}>
+            {[30, 45, 60].map((sec) => (
+              <TouchableOpacity
+                key={sec}
+                style={[
+                  styles.roundChip,
+                  {
+                    backgroundColor: timePerPerson === sec ? colors.tint : colorScheme === 'dark' ? '#374151' : '#F3F4F6',
+                    borderColor: timePerPerson === sec ? colors.tint : border,
+                  },
+                ]}
+                onPress={() => setTimePerPerson(sec)}
+              >
+                <ThemedText
+                  style={[
+                    styles.roundChipText,
+                    { color: timePerPerson === sec ? '#FFFFFF' : colors.text },
+                  ]}
+                >
+                  {t('games.wrongAnswers.timeSeconds', { seconds: sec })}
+                </ThemedText>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </ThemedView>
         <TouchableOpacity
           style={[
             styles.primaryButton,
@@ -509,6 +590,12 @@ export default function WrongAnswersOnlyScreen() {
             <ThemedText style={[styles.playerSubtitle, { color: colors.text }]}>
               {answerer?.name ?? '—'}
             </ThemedText>
+            <View style={[styles.timerRow, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6', borderColor: border }]}>
+              <Ionicons name="time-outline" size={20} color={timeRemaining <= 10 ? '#EF4444' : colors.tint} />
+              <ThemedText style={[styles.timerText, { color: colors.text }]}>
+                {t('games.wrongAnswers.timeForThisQuestion', { time: timeRemaining })}
+              </ThemedText>
+            </View>
             <ThemedText style={[styles.sectionLabel, { marginTop: 20 }]}>
               {t('games.wrongAnswers.questionTitle')}
             </ThemedText>
@@ -800,6 +887,17 @@ const styles = StyleSheet.create({
     borderWidth: 2,
   },
   roundChipText: { fontSize: 16, fontWeight: '600' },
+  timerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
+    borderRadius: 10,
+    borderWidth: 1,
+    marginTop: 12,
+  },
+  timerText: { fontSize: 16, fontWeight: '600' },
   addBtn: {
     width: 40,
     height: 40,
