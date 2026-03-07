@@ -6,11 +6,16 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { fetchNeverHaveIEverQuestions, type NeverHaveIEverQuestionItem } from '@/services/neverHaveIEverService';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const options = { headerShown: false };
+
+function shuffleIndices(n: number): number[] {
+  const arr = Array.from({ length: n }, (_, i) => i);
+  return arr.sort(() => Math.random() - 0.5);
+}
 
 export default function NeverHaveIEverScreen() {
   const insets = useSafeAreaInsets();
@@ -20,8 +25,9 @@ export default function NeverHaveIEverScreen() {
   const { t, locale } = useTranslation();
   const [step, setStep] = useState<'intro' | 'game'>('intro');
   const [questions, setQuestions] = useState<NeverHaveIEverQuestionItem[]>([]);
-  const [questionIndex, setQuestionIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const remainingRef = useRef<number[]>([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -31,7 +37,8 @@ export default function NeverHaveIEverScreen() {
         if (cancelled) return;
         const shuffled = list?.length ? [...list].sort(() => Math.random() - 0.5) : [];
         setQuestions(shuffled);
-        setQuestionIndex(0);
+        remainingRef.current = [];
+        setCurrentIndex(null);
       })
       .catch(() => setQuestions([]))
       .finally(() => {
@@ -40,16 +47,37 @@ export default function NeverHaveIEverScreen() {
     return () => { cancelled = true; };
   }, [locale]);
 
-  const currentQuestion = step === 'game' && questions.length > 0
-    ? questions[questionIndex % questions.length]
+  const currentQuestion = step === 'game' && questions.length > 0 && currentIndex !== null
+    ? questions[currentIndex]
     : null;
+
+  const pickNext = () => {
+    if (questions.length === 0) return;
+    if (remainingRef.current.length === 0) {
+      remainingRef.current = shuffleIndices(questions.length);
+    }
+    const next = remainingRef.current.pop();
+    setCurrentIndex(next ?? null);
+  };
 
   const handleNext = () => {
     if (questions.length === 0) return;
-    setQuestionIndex((i) => i + 1);
+    pickNext();
   };
 
-  const handleStart = () => setStep('game');
+  const handleStart = () => {
+    if (questions.length === 0) {
+      setStep('game');
+      setCurrentIndex(null);
+      return;
+    }
+    if (remainingRef.current.length === 0) {
+      remainingRef.current = shuffleIndices(questions.length);
+    }
+    const next = remainingRef.current.pop();
+    setCurrentIndex(next ?? null);
+    setStep('game');
+  };
 
   const topPadding = { paddingTop: Math.max(insets.top, 16) };
 
