@@ -296,6 +296,14 @@ export default {
       playerExists: 'Oyuncu mevcut',
       playerExistsMessage: 'Bu isimde bir oyuncu zaten var.',
     },
+    neverHaveIEver: {
+      title: 'Hiç yapmadım',
+      howToPlay: 'Nasıl oynanır',
+      rules: 'Biri "Hiç ... yapmadım" cümlesini okur. Yapanlar içer (veya bir parmağını indirir). Sırayla veya listeyi geçerek.',
+      start: 'Başla',
+      next: 'Sonraki',
+      noQuestions: 'Soru yok.',
+    },
   },
   home: {
     rateUs: 'Bizi değerlendir',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Sadece yanlış cevaplar',
         description: 'Bir kişi soru sorar, diğerleri cevap verir ve her doğru cevap için puan alırsınız.',
+      },
+      'never-have-i-ever': {
+        title: 'Hiç yapmadım',
+        description: 'Kimin ne yaptığını keşfet. Cümleleri oku ve kimin yaptığını gör.',
       },
     },
   },

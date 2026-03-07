@@ -13,6 +13,7 @@ const GAMES = [
   { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981' },
   { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B' },
   { id: 'wrong-answers-only', route: '/games/wrong-answers-only', icon: 'help-buoy' as const, accent: '#EC4899' },
+  { id: 'never-have-i-ever', route: '/games/never-have-i-ever', icon: 'hand-left' as const, accent: '#14B8A6' },
 ];
 
 export default function GamesScreen() {

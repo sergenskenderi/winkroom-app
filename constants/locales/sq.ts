@@ -296,6 +296,14 @@ export default {
       playerExists: 'Lojtari ekziston',
       playerExistsMessage: 'Një lojtar me këtë emër ekziston tashmë.',
     },
+    neverHaveIEver: {
+      title: 'Kurrë nuk kam',
+      howToPlay: 'Si luhet',
+      rules: 'Dikush lexon një fjali "Kurrë nuk kam...". Kush e ka bërë pi (ose ul një gisht). Me radhë ose duke kaluar listën.',
+      start: 'Fillo',
+      next: 'Tjetra',
+      noQuestions: 'Nuk ka pyetje.',
+    },
   },
   home: {
     rateUs: 'Na vlerëso',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Vetëm përgjigje të gabuara',
         description: 'Një person bën pyetje, të tjerët përgjigjen dhe marrin pikë për çdo përgjigje të saktë.',
+      },
+      'never-have-i-ever': {
+        title: 'Kurrë nuk kam',
+        description: 'Zbulo kush ka bërë çfarë. Lexo fjalitë dhe shiko kush e ka bërë.',
       },
     },
   },

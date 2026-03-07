@@ -296,6 +296,14 @@ export default {
       playerExists: 'Player exists',
       playerExistsMessage: 'A player with this name already exists.',
     },
+    neverHaveIEver: {
+      title: 'Never Have I Ever',
+      howToPlay: 'How to Play',
+      rules: 'One person reads a "Never have I ever..." statement. Everyone who has done it takes a drink (or puts a finger down). Take turns or keep going through the list.',
+      start: 'Start',
+      next: 'Next',
+      noQuestions: 'No questions available.',
+    },
   },
   home: {
     rateUs: 'Rate us',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Wrong Answers Only',
         description: 'One player asks questions and others answer. Score a point for each correct answer.',
+      },
+      'never-have-i-ever': {
+        title: 'Never Have I Ever',
+        description: 'Reveal who has done what. Read statements and see who has done it.',
       },
     },
   },

@@ -296,6 +296,14 @@ export default {
       playerExists: 'Spieler existiert',
       playerExistsMessage: 'Ein Spieler mit diesem Namen existiert bereits.',
     },
+    neverHaveIEver: {
+      title: 'Ich habe noch nie',
+      howToPlay: 'So geht\'s',
+      rules: 'Eine Person liest eine "Ich habe noch nie..."-Aussage. Wer es getan hat, trinkt (oder legt einen Finger runter). Reihum oder durch die Liste.',
+      start: 'Start',
+      next: 'Weiter',
+      noQuestions: 'Keine Fragen verfügbar.',
+    },
   },
   home: {
     rateUs: 'Bewerte uns',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Nur falsche Antworten',
         description: 'Eine Person stellt Fragen, alle antworten, und richtige Antworten bringen Punkte.',
+      },
+      'never-have-i-ever': {
+        title: 'Ich habe noch nie',
+        description: 'Zeigt, wer was getan hat. Aussagen vorlesen und schauen, wer es getan hat.',
       },
     },
   },

@@ -47,6 +47,10 @@ export default function GamesLayout() {
         name="wrong-answers-only/index" 
         options={{ headerShown: false, presentation: 'card' }} 
       />
+      <Stack.Screen 
+        name="never-have-i-ever/index" 
+        options={{ headerShown: false, presentation: 'card' }} 
+      />
     </Stack>
   );
 } 

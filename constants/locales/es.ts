@@ -296,6 +296,14 @@ export default {
       playerExists: 'Jugador ya existe',
       playerExistsMessage: 'Ya existe un jugador con este nombre.',
     },
+    neverHaveIEver: {
+      title: 'Nunca he',
+      howToPlay: 'Cómo jugar',
+      rules: 'Alguien lee una frase "Nunca he...". Quien lo haya hecho bebe (o baja un dedo). Por turnos o pasando la lista.',
+      start: 'Empezar',
+      next: 'Siguiente',
+      noQuestions: 'No hay preguntas disponibles.',
+    },
   },
   home: {
     rateUs: 'Valóranos',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Solo respuestas incorrectas',
         description: 'Una persona hace preguntas, los demás responden y suman puntos por cada respuesta correcta.',
+      },
+      'never-have-i-ever': {
+        title: 'Nunca he',
+        description: 'Descubre quién ha hecho qué. Lee las frases y mira quién lo ha hecho.',
       },
     },
   },

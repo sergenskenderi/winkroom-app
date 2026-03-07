@@ -296,6 +296,14 @@ export default {
       playerExists: 'Joueur existant',
       playerExistsMessage: 'Un joueur avec ce nom existe déjà.',
     },
+    neverHaveIEver: {
+      title: 'Je n\'ai jamais',
+      howToPlay: 'Comment jouer',
+      rules: 'Une personne lit une phrase "Je n\'ai jamais...". Ceux qui l\'ont fait boivent (ou baissent un doigt). À tour de rôle ou en enchaînant la liste.',
+      start: 'Commencer',
+      next: 'Suivant',
+      noQuestions: 'Aucune question disponible.',
+    },
   },
   home: {
     rateUs: 'Note nous',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Réponses fausses seulement',
         description: 'Une personne pose des questions, les autres répondent et marquent des points pour chaque bonne réponse.',
+      },
+      'never-have-i-ever': {
+        title: 'Je n\'ai jamais',
+        description: 'Découvre qui a fait quoi. Lis les phrases et vois qui l\'a fait.',
       },
     },
   },

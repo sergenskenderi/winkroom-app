@@ -3,6 +3,7 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import 'react-native-reanimated';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { BackendConnectionProvider } from '@/contexts/BackendConnectionContext';
 import { I18nProvider } from '@/contexts/I18nContext';
@@ -13,6 +14,7 @@ function LayoutContent() {
   const colorScheme = useColorScheme();
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      <SafeAreaProvider>
       <Stack>
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         <Stack.Screen name="games" options={{ headerShown: false }} />
@@ -20,6 +22,7 @@ function LayoutContent() {
         <Stack.Screen name="+not-found" />
       </Stack>
       <StatusBar style="auto" />
+      </SafeAreaProvider>
     </ThemeProvider>
   );
 }

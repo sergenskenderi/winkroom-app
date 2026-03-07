@@ -296,6 +296,14 @@ export default {
       playerExists: 'Giocatore esistente',
       playerExistsMessage: 'Esiste già un giocatore con questo nome.',
     },
+    neverHaveIEver: {
+      title: 'Non ho mai',
+      howToPlay: 'Come si gioca',
+      rules: 'Una persona legge una frase "Non ho mai...". Chi l\'ha fatto beve (o abbassa un dito). A turno o proseguendo la lista.',
+      start: 'Inizia',
+      next: 'Prossimo',
+      noQuestions: 'Nessuna domanda disponibile.',
+    },
   },
   home: {
     rateUs: 'Valutaci',
@@ -329,6 +337,10 @@ export default {
       'wrong-answers-only': {
         title: 'Solo risposte sbagliate',
         description: 'Una persona fa le domande, gli altri rispondono e ogni risposta corretta vale un punto.',
+      },
+      'never-have-i-ever': {
+        title: 'Non ho mai',
+        description: 'Scopri chi ha fatto cosa. Leggi le frasi e vedi chi l\'ha fatto.',
       },
     },
   },
