@@ -304,6 +304,21 @@ export default {
       next: 'Prossimo',
       noQuestions: 'Nessuna domanda disponibile.',
     },
+    truthOrDare: {
+      title: 'Verità o Coraggio',
+      howToPlay: 'Come si gioca',
+      rules: 'Aggiungi almeno 2 giocatori. Ogni turno viene scelto un giocatore a caso. Sceglie Verità (rispondere onestamente) o Coraggio (fare una sfida). Poi "Prossimo turno".',
+      addPlayers: 'Aggiungi giocatori',
+      whosTurn: 'A chi tocca?',
+      choosePrompt: '{{name}}, scegli Verità o Coraggio!',
+      truth: 'Verità',
+      dare: 'Coraggio',
+      nextTurn: 'Prossimo turno',
+      noContent: 'Nessuna domanda o sfida disponibile.',
+      exitTitle: 'Uscire dalla partita?',
+      exitMessage: 'Lasciare Verità o Coraggio e tornare ai giocatori?',
+      exitConfirm: 'Esci',
+    },
   },
   home: {
     rateUs: 'Valutaci',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Non ho mai',
         description: 'Scopri chi ha fatto cosa. Leggi le frasi e vedi chi l\'ha fatto.',
+      },
+      'truth-or-dare': {
+        title: 'Verità o Coraggio',
+        description: 'Un giocatore a caso sceglie Verità o Coraggio. Rispondi onestamente o affronta la sfida!',
       },
     },
   },

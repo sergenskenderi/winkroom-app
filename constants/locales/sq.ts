@@ -304,6 +304,21 @@ export default {
       next: 'Tjetra',
       noQuestions: 'Nuk ka pyetje.',
     },
+    truthOrDare: {
+      title: 'E vërteta apo Detyra',
+      howToPlay: 'Si luhet',
+      rules: 'Shto të paktën 2 lojtarë. Çdo radhë zgjidhet një lojtar rastësisht. Zgjedh E vërtetën (përgjigju sinqerisht) ose Detyrën (bëj sfidën). Pastaj "Rradha tjetër".',
+      addPlayers: 'Shto lojtarë',
+      whosTurn: 'Kush luan?',
+      choosePrompt: '{{name}}, zgjidh E vërtetën ose Detyrën!',
+      truth: 'E vërteta',
+      dare: 'Detyra',
+      nextTurn: 'Rradha tjetër',
+      noContent: 'Nuk ka pyetje ose detyrë.',
+      exitTitle: 'Dil nga loja?',
+      exitMessage: 'Të dalësh nga E vërteta apo Detyra?',
+      exitConfirm: 'Dil',
+    },
   },
   home: {
     rateUs: 'Na vlerëso',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Kurrë nuk kam',
         description: 'Zbulo kush ka bërë çfarë. Lexo fjalitë dhe shiko kush e ka bërë.',
+      },
+      'truth-or-dare': {
+        title: 'E vërteta apo Detyra',
+        description: 'Një lojtar i rastësishëm zgjedh E vërtetën ose Detyrën. Përgjigju sinqerisht ose bëj detyrën!',
       },
     },
   },

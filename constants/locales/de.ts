@@ -304,6 +304,21 @@ export default {
       next: 'Weiter',
       noQuestions: 'Keine Fragen verfügbar.',
     },
+    truthOrDare: {
+      title: 'Wahrheit oder Pflicht',
+      howToPlay: 'So geht\'s',
+      rules: 'Mindestens 2 Spieler. Jeder Zug wird ein Spieler zufällig gewählt. Er wählt Wahrheit (ehrlich antworten) oder Pflicht (eine Aufgabe). Dann "Nächster Zug".',
+      addPlayers: 'Spieler hinzufügen',
+      whosTurn: 'Wer ist dran?',
+      choosePrompt: '{{name}}, wähle Wahrheit oder Pflicht!',
+      truth: 'Wahrheit',
+      dare: 'Pflicht',
+      nextTurn: 'Nächster Zug',
+      noContent: 'Keine Frage oder Pflicht verfügbar.',
+      exitTitle: 'Spiel beenden?',
+      exitMessage: 'Wahrheit oder Pflicht verlassen?',
+      exitConfirm: 'Beenden',
+    },
   },
   home: {
     rateUs: 'Bewerte uns',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Ich habe noch nie',
         description: 'Zeigt, wer was getan hat. Aussagen vorlesen und schauen, wer es getan hat.',
+      },
+      'truth-or-dare': {
+        title: 'Wahrheit oder Pflicht',
+        description: 'Zufälliger Spieler wählt Wahrheit oder Pflicht. Ehrlich antworten oder die Pflicht erfüllen!',
       },
     },
   },

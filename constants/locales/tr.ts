@@ -304,6 +304,21 @@ export default {
       next: 'Sonraki',
       noQuestions: 'Soru yok.',
     },
+    truthOrDare: {
+      title: 'Doğruluk mu Cesaret mi',
+      howToPlay: 'Nasıl oynanır',
+      rules: 'En az 2 oyuncu ekle. Her turda rastgele bir oyuncu seçilir. Doğruluk (dürüst cevapla) veya Cesaret (meydan okumayı yap) seçer. Sonra "Sonraki tur".',
+      addPlayers: 'Oyuncu ekle',
+      whosTurn: 'Sıra kimde?',
+      choosePrompt: '{{name}}, Doğruluk mu Cesaret mi seç!',
+      truth: 'Doğruluk',
+      dare: 'Cesaret',
+      nextTurn: 'Sonraki tur',
+      noContent: 'Soru veya cesaret yok.',
+      exitTitle: 'Oyundan çık?',
+      exitMessage: 'Doğruluk mu Cesaret mi oyunundan çıkıp oyunculara dön?',
+      exitConfirm: 'Çık',
+    },
   },
   home: {
     rateUs: 'Bizi değerlendir',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Hiç yapmadım',
         description: 'Kimin ne yaptığını keşfet. Cümleleri oku ve kimin yaptığını gör.',
+      },
+      'truth-or-dare': {
+        title: 'Doğruluk mu Cesaret mi',
+        description: 'Rastgele bir oyuncu Doğruluk veya Cesaret seçer. Dürüst cevapla veya cesareti yap!',
       },
     },
   },

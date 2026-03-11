@@ -51,6 +51,10 @@ export default function GamesLayout() {
         name="never-have-i-ever/index" 
         options={{ headerShown: false, presentation: 'card' }} 
       />
+      <Stack.Screen 
+        name="truth-or-dare/index" 
+        options={{ headerShown: false, presentation: 'card' }} 
+      />
     </Stack>
   );
 } 

@@ -5,15 +5,16 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 const GAMES = [
-  { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1' },
-  { id: 'guess-the-paint', route: '/games/mafia-role-assignment', icon: 'color-palette' as const, accent: '#8B5CF6' },
-  { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981' },
-  { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B' },
-  { id: 'wrong-answers-only', route: '/games/wrong-answers-only', icon: 'help-buoy' as const, accent: '#EC4899' },
-  { id: 'never-have-i-ever', route: '/games/never-have-i-ever', icon: 'hand-left' as const, accent: '#14B8A6' },
+  { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1', image: require('../../assets/images/impostor_game_cartoon.png') },
+  { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B', image: require('../../assets/images/synonyms_game.png') },
+  { id: 'wrong-answers-only', route: '/games/wrong-answers-only', icon: 'help-buoy' as const, accent: '#EC4899', image: require('../../assets/images/wrong_answers_only.png') },
+  { id: 'never-have-i-ever', route: '/games/never-have-i-ever', icon: 'hand-left' as const, accent: '#14B8A6', image: require('../../assets/images/never_have_ever.png') },
+  { id: 'truth-or-dare', route: '/games/truth-or-dare', icon: 'flash' as const, accent: '#F59E0B', image: require('../../assets/images/truth_or_dare.png') },
+  { id: 'guess-the-paint', route: '/games/mafia-role-assignment', icon: 'color-palette' as const, accent: '#8B5CF6', image: require('../../assets/images/mafia_role_assignment.png') },
+  { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981', image: require('../../assets/images/charades_word_suggestion.png') },
 ];
 
 export default function GamesScreen() {
@@ -28,21 +29,21 @@ export default function GamesScreen() {
     if (game.route) router.push(game.route as any);
   };
 
-  const handleRateUs = () => {
-    Linking.openURL('https://apps.apple.com/app/idXXXXXXXX').catch(() =>
-      Alert.alert(t('common.error'), t('home.couldNotOpen'))
-    );
-  };
+  // const handleRateUs = () => {
+  //   Linking.openURL('https://apps.apple.com/app/idXXXXXXXX').catch(() =>
+  //     Alert.alert(t('common.error'), t('home.couldNotOpen'))
+  //   );
+  // };
 
   const handleSettings = () => {
     router.push('/settings');
   };
 
-  const handleTerms = () => {
-    Linking.openURL('https://example.com/terms').catch(() =>
-      Alert.alert(t('common.error'), t('home.couldNotOpenTerms'))
-    );
-  };
+  // const handleTerms = () => {
+  //   Linking.openURL('https://example.com/terms').catch(() =>
+  //     Alert.alert(t('common.error'), t('home.couldNotOpenTerms'))
+  //   );
+  // };
 
   return (
     <ThemedView style={styles.container}>
@@ -64,9 +65,17 @@ export default function GamesScreen() {
                 </ThemedText>
               </View>
               <View style={[styles.cardIllustration, { backgroundColor: game.accent + '18' }]}>
-                <View style={[styles.cardIconWrap, { backgroundColor: game.accent }]}>
-                  <Ionicons name={game.icon} size={48} color="#FFFFFF" />
-                </View>
+                {'image' in game && game.image ? (
+                  <Image
+                    source={game.image}
+                    style={[styles.cardImage, game.id === 'one-word-unites' && styles.cardImageScale]}
+                    resizeMode="cover"
+                  />
+                ) : (
+                  <View style={[styles.cardIconWrap, { backgroundColor: game.accent }]}>
+                    <Ionicons name={game.icon} size={48} color="#FFFFFF" />
+                  </View>
+                )}
                 {!canPress && (
                   <View style={styles.comingSoonBadge}>
                     <ThemedText style={styles.comingSoonText}>{t('games.oneWordUnites.comingSoon')}</ThemedText>
@@ -78,21 +87,21 @@ export default function GamesScreen() {
         })}
 
         <View style={[styles.footer, { backgroundColor: cardBg }]}>
-          <TouchableOpacity style={styles.footerRow} onPress={handleRateUs} activeOpacity={0.7}>
+          {/* <TouchableOpacity style={styles.footerRow} onPress={handleRateUs} activeOpacity={0.7}>
             <Ionicons name="star" size={22} color={descColor} />
             <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.rateUs')}</ThemedText>
             <Ionicons name="chevron-forward" size={20} color={descColor} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity style={styles.footerRow} onPress={handleSettings} activeOpacity={0.7}>
             <Ionicons name="settings-outline" size={22} color={descColor} />
             <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.settings')}</ThemedText>
             <Ionicons name="chevron-forward" size={20} color={descColor} />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.footerRow} onPress={handleTerms} activeOpacity={0.7}>
+          {/* <TouchableOpacity style={styles.footerRow} onPress={handleTerms} activeOpacity={0.7}>
             <Ionicons name="document-text-outline" size={22} color={descColor} />
             <ThemedText style={[styles.footerText, { color: descColor }]}>{t('home.terms')}</ThemedText>
             <Ionicons name="chevron-forward" size={20} color={descColor} />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </ScrollView>
     </ThemedView>
@@ -138,6 +147,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     position: 'relative',
+    overflow: 'hidden',
+  },
+  cardImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 20,
+  },
+  cardImageScale: {
+    transform: [{ scale: 1.25 }],
   },
   cardIconWrap: {
     width: 88,

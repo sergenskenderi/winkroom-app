@@ -22,9 +22,9 @@ const ip = getLocalIPAddress();
 if (ip) {
   console.log('\n🌐 Your current IP address is:', ip);
   console.log('📝 Update your Config.ts with:');
-  console.log(`   API_BASE_URL: 'http://${ip}:5400/api'`);
+  console.log(`   API_BASE_URL: 'http://${ip}:5400'`);
   console.log('\n💡 Quick copy-paste:');
-  console.log(`   API_BASE_URL: 'http://${ip}:5400/api',`);
+  console.log(`   API_BASE_URL: 'http://${ip}:5400',`);
   console.log('\n');
 } else {
   console.log('❌ Could not find your IP address');

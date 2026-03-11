@@ -304,6 +304,21 @@ export default {
       next: 'Next',
       noQuestions: 'No questions available.',
     },
+    truthOrDare: {
+      title: 'Truth or Dare',
+      howToPlay: 'How to Play',
+      rules: 'Add at least 2 players. Each turn a random player is chosen. They pick Truth (answer a question honestly) or Dare (do a challenge). Then tap Next turn to pick again.',
+      addPlayers: 'Add Players',
+      whosTurn: "Who's turn?",
+      choosePrompt: '{{name}}, choose Truth or Dare!',
+      truth: 'Truth',
+      dare: 'Dare',
+      nextTurn: 'Next turn',
+      noContent: 'No question or dare available.',
+      exitTitle: 'Exit game?',
+      exitMessage: 'Leave Truth or Dare and go back to players?',
+      exitConfirm: 'Exit',
+    },
   },
   home: {
     rateUs: 'Rate us',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Never Have I Ever',
         description: 'Reveal who has done what. Read statements and see who has done it.',
+      },
+      'truth-or-dare': {
+        title: 'Truth or Dare',
+        description: 'Random player picks Truth or Dare. Answer honestly or do the dare!',
       },
     },
   },

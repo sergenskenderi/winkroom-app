@@ -304,6 +304,21 @@ export default {
       next: 'Suivant',
       noQuestions: 'Aucune question disponible.',
     },
+    truthOrDare: {
+      title: 'Action ou Vérité',
+      howToPlay: 'Comment jouer',
+      rules: 'Ajoute au moins 2 joueurs. À chaque tour un joueur est choisi au hasard. Il choisit Vérité (répondre honnêtement) ou Action (faire un défi). Puis "Tour suivant".',
+      addPlayers: 'Ajouter des joueurs',
+      whosTurn: 'À qui le tour ?',
+      choosePrompt: '{{name}}, choisis Vérité ou Action !',
+      truth: 'Vérité',
+      dare: 'Action',
+      nextTurn: 'Tour suivant',
+      noContent: 'Aucune question ou action disponible.',
+      exitTitle: 'Quitter la partie ?',
+      exitMessage: 'Quitter Action ou Vérité et revenir aux joueurs ?',
+      exitConfirm: 'Quitter',
+    },
   },
   home: {
     rateUs: 'Note nous',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Je n\'ai jamais',
         description: 'Découvre qui a fait quoi. Lis les phrases et vois qui l\'a fait.',
+      },
+      'truth-or-dare': {
+        title: 'Action ou Vérité',
+        description: 'Un joueur au hasard choisit Vérité ou Action. Réponds honnêtement ou fais l\'action !',
       },
     },
   },

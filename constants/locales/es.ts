@@ -304,6 +304,21 @@ export default {
       next: 'Siguiente',
       noQuestions: 'No hay preguntas disponibles.',
     },
+    truthOrDare: {
+      title: 'Verdad o Reto',
+      howToPlay: 'Cómo jugar',
+      rules: 'Añade al menos 2 jugadores. Cada turno se elige uno al azar. Elige Verdad (responder con sinceridad) o Reto (hacer un desafío). Luego "Siguiente turno".',
+      addPlayers: 'Añadir jugadores',
+      whosTurn: '¿Quién juega?',
+      choosePrompt: '¡{{name}}, elige Verdad o Reto!',
+      truth: 'Verdad',
+      dare: 'Reto',
+      nextTurn: 'Siguiente turno',
+      noContent: 'No hay pregunta o reto disponible.',
+      exitTitle: '¿Salir del juego?',
+      exitMessage: '¿Dejar Verdad o Reto y volver a jugadores?',
+      exitConfirm: 'Salir',
+    },
   },
   home: {
     rateUs: 'Valóranos',
@@ -341,6 +356,10 @@ export default {
       'never-have-i-ever': {
         title: 'Nunca he',
         description: 'Descubre quién ha hecho qué. Lee las frases y mira quién lo ha hecho.',
+      },
+      'truth-or-dare': {
+        title: 'Verdad o Reto',
+        description: 'Un jugador al azar elige Verdad o Reto. ¡Responde con sinceridad o cumple el reto!',
       },
     },
   },

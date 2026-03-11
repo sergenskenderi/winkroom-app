@@ -8,17 +8,14 @@
 
 export const Config = {
   // === UPDATE THIS URL WHEN CHANGING NETWORKS ===
-  API_BASE_URL: 'http://172.20.10.11:5400/api',
-  getHealthUrl: () => {
-    const base = Config.API_BASE_URL.replace(/\/api\/?$/, '') || Config.API_BASE_URL;
-    return `${base}/health`;
-  },
-  
+  API_BASE_URL: 'http://217.76.51.97/winkroom/api',
+  getHealthUrl: () => `${Config.API_BASE_URL.replace(/\/$/, '')}/health`,
+
   // Alternative configurations (uncomment the one you need):
-  // API_BASE_URL: 'http://localhost:5400/api', // For web development
-  // API_BASE_URL: 'http://192.168.100.79:5400/api', // Common home WiFi
-  // API_BASE_URL: 'http://172.20.10.2:5400/api', // Common tethering IP
-  // API_BASE_URL: 'http://10.0.0.100:5400/api', // Alternative home network
+  // API_BASE_URL: 'http://localhost:5400', // For web development
+  // API_BASE_URL: 'http://192.168.100.79:5400', // Common home WiFi
+  // API_BASE_URL: 'http://172.20.10.2:5400', // Common tethering IP
+  // API_BASE_URL: 'http://10.0.0.100:5400', // Alternative home network
   
   // === OTHER CONFIGURATION ===
   TIMEOUT: 10000, // 10 seconds
