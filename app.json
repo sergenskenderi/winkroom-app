@@ -10,11 +10,19 @@
     "newArchEnabled": true,
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.sergenskenderi.winkroom_app",
+      "bundleIdentifier": "com.sergenskenderi.winkroom",
       "buildNumber": "1",
       "infoPlist": {
         "NSCameraUsageDescription": "Winkroom uses the camera for in-app activities.",
-        "NSPhotoLibraryUsageDescription": "Winkroom uses the photo library for in-app activities."
+        "NSPhotoLibraryUsageDescription": "Winkroom uses the photo library for in-app activities.",
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "217.76.51.97": {
+              "NSExceptionAllowsInsecureHTTPLoads": true
+            }
+          }
+        }
       }
     },
     "android": {
@@ -24,7 +32,10 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "web": {
       "bundler": "metro",
