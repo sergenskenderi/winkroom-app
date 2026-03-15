@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "winkroom-app",
+    "name": "WinkRoom",
     "slug": "winkroom",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "winkroom-app",
+    "scheme": "winkroom",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
@@ -15,14 +15,7 @@
       "infoPlist": {
         "NSCameraUsageDescription": "Winkroom uses the camera for in-app activities.",
         "NSPhotoLibraryUsageDescription": "Winkroom uses the photo library for in-app activities.",
-        "ITSAppUsesNonExemptEncryption": false,
-        "NSAppTransportSecurity": {
-          "NSExceptionDomains": {
-            "217.76.51.97": {
-              "NSExceptionAllowsInsecureHTTPLoads": true
-            }
-          }
-        }
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {

@@ -16,8 +16,7 @@ export default function SuspectGameScreen() {
   };
 
   const handlePlayNow = () => {
-    // TODO: Implement actual game logic
-    console.log('Starting Suspect the Word game...');
+    router.back();
   };
 
   return (

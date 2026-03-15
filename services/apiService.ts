@@ -1,29 +1,11 @@
 import { Config } from '@/constants/Config';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 class ApiService {
   private baseURL = Config.API_BASE_URL;
   private timeout = Config.TIMEOUT;
 
-  // Get authentication token
-  private async getAuthToken(): Promise<string | null> {
-    try {
-      return await AsyncStorage.getItem('@winkroom_auth_token');
-    } catch (error) {
-      console.error('Error getting auth token:', error);
-      return null;
-    }
-  }
-
-  // Create headers with authentication
-  private async createHeaders(customHeaders?: Record<string, string>): Promise<HeadersInit> {
-    const token = await this.getAuthToken();
-    const headers: HeadersInit = {
-      'Content-Type': 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...customHeaders,
-    };
-    return headers;
+  private createHeaders(customHeaders?: Record<string, string>): HeadersInit {
+    return { 'Content-Type': 'application/json', ...customHeaders };
   }
 
   async checkBackend(): Promise<boolean> {
@@ -42,7 +24,7 @@ class ApiService {
 
   async get<T>(endpoint: string, customHeaders?: Record<string, string>): Promise<T | null> {
     const url = `${this.baseURL}${endpoint}`;
-    const headers = await this.createHeaders(customHeaders);
+    const headers = this.createHeaders(customHeaders);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -63,7 +45,6 @@ class ApiService {
         (err as Error & { url?: string; status?: number; body?: string }).url = url;
         (err as Error & { url?: string; status?: number; body?: string }).status = response.status;
         (err as Error & { url?: string; status?: number; body?: string }).body = body;
-        console.error('GET failed:', url, response.status, body?.slice(0, 200));
         throw err;
       }
 
@@ -71,9 +52,6 @@ class ApiService {
     } catch (error) {
       clearTimeout(timeoutId);
       if ((error as Error).message?.startsWith('HTTP error')) throw error;
-      if ((error as Error).name !== 'AbortError') {
-        console.error('GET request error:', (error as Error).message, 'URL:', url);
-      }
       throw error;
     }
   }
@@ -81,7 +59,7 @@ class ApiService {
   // Generic POST request
   async post<T>(endpoint: string, data?: any, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-    const headers = await this.createHeaders(customHeaders);
+    const headers = this.createHeaders(customHeaders);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -103,7 +81,6 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      if ((error as Error).name !== 'AbortError') console.error('POST request error:', error);
       throw error;
     }
   }
@@ -111,7 +88,7 @@ class ApiService {
   // Generic PUT request
   async put<T>(endpoint: string, data?: any, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-    const headers = await this.createHeaders(customHeaders);
+    const headers = this.createHeaders(customHeaders);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -133,7 +110,6 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      if ((error as Error).name !== 'AbortError') console.error('PUT request error:', error);
       throw error;
     }
   }
@@ -141,7 +117,7 @@ class ApiService {
   // Generic DELETE request
   async delete<T>(endpoint: string, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-    const headers = await this.createHeaders(customHeaders);
+    const headers = this.createHeaders(customHeaders);
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -162,20 +138,13 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      if ((error as Error).name !== 'AbortError') console.error('DELETE request error:', error);
       throw error;
     }
   }
 
-  // Upload file with FormData
   async uploadFile<T>(endpoint: string, formData: FormData, customHeaders?: Record<string, string>): Promise<T> {
     const url = `${this.baseURL}${endpoint}`;
-    const token = await this.getAuthToken();
-    
-    const headers: HeadersInit = {
-      ...(token && { Authorization: `Bearer ${token}` }),
-      ...customHeaders,
-    };
+    const headers: HeadersInit = { ...customHeaders };
 
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), this.timeout);
@@ -197,14 +166,8 @@ class ApiService {
       return await response.json();
     } catch (error) {
       clearTimeout(timeoutId);
-      if ((error as Error).name !== 'AbortError') console.error('File upload error:', error);
       throw error;
     }
-  }
-
-  // Upload profile picture specifically
-  async uploadProfilePicture<T>(formData: FormData): Promise<T> {
-    return this.uploadFile<T>('/auth/profile-picture', formData);
   }
 }
 

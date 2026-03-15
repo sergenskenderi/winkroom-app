@@ -8,7 +8,7 @@
 
 export const Config = {
   // === UPDATE THIS URL WHEN CHANGING NETWORKS ===
-  API_BASE_URL: 'http://217.76.51.97/winkroom/api',
+  API_BASE_URL: 'https://winkroom.app/winkroom/',
   getHealthUrl: () => `${Config.API_BASE_URL.replace(/\/$/, '')}/health`,
 
   // Alternative configurations (uncomment the one you need):
@@ -17,8 +17,11 @@ export const Config = {
   // API_BASE_URL: 'http://172.20.10.2:5400', // Common tethering IP
   // API_BASE_URL: 'http://10.0.0.100:5400', // Alternative home network
   
-  // === OTHER CONFIGURATION ===
-  TIMEOUT: 10000, // 10 seconds
+  PRIVACY_POLICY_URL: 'https://winkroom.app/privacy',
+  TERMS_URL: 'https://winkroom.app/terms',
+  SUPPORT_URL: 'https://winkroom.app/support',
+
+  TIMEOUT: 10000,
   RETRY_ATTEMPTS: 3,
   
   // === HELPFUL TIPS ===

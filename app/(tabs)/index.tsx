@@ -5,10 +5,10 @@ import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
-import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Alert, Image, ScrollView, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 
 const GAMES = [
-  { id: 'one-word-unites', route: '/games/one-word-unites', icon: 'people' as const, accent: '#6366F1', image: require('../../assets/images/impostor_game_cartoon.png') },
+  { id: 'one-word-unites', route: '/games/one-word-unites/single-device', icon: 'people' as const, accent: '#6366F1', image: require('../../assets/images/impostor_game_cartoon.png') },
   { id: 'synonyms', route: '/games/synonyms', icon: 'swap-horizontal' as const, accent: '#F59E0B', image: require('../../assets/images/synonyms_game.png') },
   { id: 'wrong-answers-only', route: '/games/wrong-answers-only', icon: 'help-buoy' as const, accent: '#EC4899', image: require('../../assets/images/wrong_answers_only.png') },
   { id: 'never-have-i-ever', route: '/games/never-have-i-ever', icon: 'hand-left' as const, accent: '#14B8A6', image: require('../../assets/images/never_have_ever.png') },
@@ -17,13 +17,18 @@ const GAMES = [
   { id: 'fool-dance', route: '/games/charades', icon: 'musical-notes' as const, accent: '#10B981', image: require('../../assets/images/charades_word_suggestion.png') },
 ];
 
+const IS_TABLET_MIN_WIDTH = 768;
+
 export default function GamesScreen() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { t } = useTranslation();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= IS_TABLET_MIN_WIDTH;
   const isDark = colorScheme === 'dark';
   const cardBg = isDark ? '#1F2937' : '#FFFFFF';
   const descColor = isDark ? '#9CA3AF' : '#666666';
+  const illustrationHeight = isTablet ? 300 : 180;
 
   const handleGamePress = (game: (typeof GAMES)[0]) => {
     if (game.route) router.push(game.route as any);
@@ -64,7 +69,7 @@ export default function GamesScreen() {
                   {t(`home.dashboard.${game.id}.description`)}
                 </ThemedText>
               </View>
-              <View style={[styles.cardIllustration, { backgroundColor: game.accent + '18' }]}>
+              <View style={[styles.cardIllustration, { backgroundColor: game.accent + '18', height: illustrationHeight }]}>
                 {'image' in game && game.image ? (
                   <Image
                     source={game.image}

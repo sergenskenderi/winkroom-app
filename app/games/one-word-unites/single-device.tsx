@@ -350,9 +350,6 @@ export default function SingleDeviceGameScreen() {
         points: player.points,
       }));
       
-      console.log('Starting new round. Players with accumulated points:', updatedPlayers.map(p => ({ name: p.name, points: p.points })));
-      console.log('Impostors for this round:', imposterIndices.map(i => shuffledPlayers[i].name));
-      
       setPlayers(updatedPlayers);
       
       // Reset timer for new round

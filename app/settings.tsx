@@ -1,12 +1,14 @@
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { Colors } from '@/constants/Colors';
+import { Config } from '@/constants/Config';
 import { useTranslation } from '@/contexts/I18nContext';
 import { useTheme } from '@/contexts/ThemeContext';
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { Ionicons } from '@expo/vector-icons';
 import { useRouter } from 'expo-router';
-import { ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import * as Linking from 'expo-linking';
+import { Alert, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { type LocaleCode } from '@/constants/locales';
 
 const LOCALE_OPTIONS: LocaleCode[] = ['en', 'tr', 'it', 'de', 'fr', 'es', 'sq'];
@@ -26,6 +28,10 @@ export default function SettingsScreen() {
     if (value === 'light') return t('home.themeLight');
     if (value === 'dark') return t('home.themeDark');
     return t('home.themeSystem');
+  };
+
+  const openUrl = (url: string) => {
+    Linking.openURL(url).catch(() => Alert.alert(t('common.error'), t('home.couldNotOpen')));
   };
 
   return (
@@ -79,6 +85,24 @@ export default function SettingsScreen() {
               </TouchableOpacity>
             ))}
           </ThemedView>
+        </ThemedView>
+        <ThemedView style={[styles.section, { backgroundColor: cardBg, borderColor: cardBorder }]}>
+          <ThemedView style={styles.sectionHeader}>
+            <Ionicons name="document-text-outline" size={24} color={colors.tint} />
+            <ThemedText style={[styles.sectionTitle, { color: colors.text }]}>{t('home.legal')}</ThemedText>
+          </ThemedView>
+          <TouchableOpacity style={[styles.localeRow, { backgroundColor: 'transparent' }]} onPress={() => openUrl(Config.PRIVACY_POLICY_URL)} activeOpacity={0.7}>
+            <ThemedText style={[styles.localeName, { color: colors.text }]}>{t('home.privacyPolicy')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={colors.tint} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.localeRow, { backgroundColor: 'transparent' }]} onPress={() => openUrl(Config.TERMS_URL)} activeOpacity={0.7}>
+            <ThemedText style={[styles.localeName, { color: colors.text }]}>{t('home.terms')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={colors.tint} />
+          </TouchableOpacity>
+          <TouchableOpacity style={[styles.localeRow, { backgroundColor: 'transparent' }]} onPress={() => openUrl(Config.SUPPORT_URL)} activeOpacity={0.7}>
+            <ThemedText style={[styles.localeName, { color: colors.text }]}>{t('home.support')}</ThemedText>
+            <Ionicons name="chevron-forward" size={20} color={colors.tint} />
+          </TouchableOpacity>
         </ThemedView>
       </ScrollView>
     </ThemedView>
