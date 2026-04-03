@@ -342,7 +342,7 @@ export default {
       },
       'guess-the-paint': {
         title: 'Mafia Role Assigment',
-        description: 'Help the mafia find the impostor.',
+        description: 'Help the citizens find the mafia.',
       },
       'fool-dance': {
         title: 'Charades Word Generator',

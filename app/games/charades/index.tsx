@@ -10,12 +10,14 @@ import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
 import {
   Alert,
+  Dimensions,
   ScrollView,
   StyleSheet,
   TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 type Step = 'rules' | 'players' | 'teams' | 'game';
 type TeamMode = 'random' | 'custom';
@@ -35,6 +37,7 @@ const CHARADES_WORDS = [
 export const options = { headerShown: false };
 
 export default function CharadesScreen() {
+  const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
   const colors = Colors[colorScheme ?? 'light'];
   const router = useRouter();
@@ -368,6 +371,7 @@ export default function CharadesScreen() {
     const border = colorScheme === 'dark' ? '#374151' : '#E5E7EB';
     const timerProgress = timerDuration > 0 ? (timerRemaining / timerDuration) * 100 : 0;
     const timerColor = timerRemaining <= 10 ? '#EF4444' : timerRemaining <= timerDuration * 0.3 ? '#F59E0B' : '#10B981';
+    const heroFont = Math.min(84, Math.max(56, Dimensions.get('window').width * 0.17));
     return (
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         <ThemedView style={styles.header}>
@@ -404,16 +408,25 @@ export default function CharadesScreen() {
               </TouchableOpacity>
             ))}
           </View>
-          <View style={styles.timerCustomRow}>
+          <View style={styles.timerHero}>
+            <View style={styles.timerHeroValueBox}>
+              <ThemedText
+                style={[styles.timerHeroValue, { color: timerColor, fontSize: heroFont, lineHeight: heroFont * 1.05 }]}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.72}
+              >
+                {timerRemaining}
+              </ThemedText>
+            </View>
+            <ThemedText style={[styles.timerHeroSuffix, { color: timerColor }]}>s</ThemedText>
+          </View>
+          <View style={styles.timerAdjustRow}>
             <TouchableOpacity style={[styles.timerNumBtn, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6' }]} onPress={() => { const next = Math.max(15, timerDuration - 15); setTimerDuration(next); if (!isTimerRunning) setTimerRemaining(next); }}>
-              <Ionicons name="remove" size={24} color={colors.text} />
+              <Ionicons name="remove" size={26} color={colors.text} />
             </TouchableOpacity>
-            <ThemedView style={[styles.timerDisplay, styles.timerDisplayLarge]}>
-              <ThemedText style={[styles.timerText, { color: timerColor }]} numberOfLines={1} adjustsFontSizeToFit>{timerRemaining}</ThemedText>
-              <ThemedText style={[styles.timerSecondsLabel, { color: timerColor }]}>s</ThemedText>
-            </ThemedView>
             <TouchableOpacity style={[styles.timerNumBtn, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#F3F4F6' }]} onPress={() => { const next = Math.min(600, timerDuration + 15); setTimerDuration(next); if (!isTimerRunning) setTimerRemaining(next); }}>
-              <Ionicons name="add" size={24} color={colors.text} />
+              <Ionicons name="add" size={26} color={colors.text} />
             </TouchableOpacity>
           </View>
           <View style={[styles.timerProgressBar, { backgroundColor: colorScheme === 'dark' ? '#374151' : '#E5E7EB' }]}>
@@ -461,7 +474,7 @@ export default function CharadesScreen() {
   };
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { paddingTop: Math.max(insets.top, 16) }]}>
       {currentStep === 'rules' && renderRules()}
       {currentStep === 'players' && renderPlayers()}
       {currentStep === 'teams' && renderTeams()}
@@ -471,7 +484,7 @@ export default function CharadesScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, paddingTop: 60 },
+  container: { flex: 1 },
   content: { flex: 1, paddingHorizontal: 16 },
   header: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 },
   backButton: { padding: 8 },
@@ -513,15 +526,15 @@ const styles = StyleSheet.create({
   wordText: { fontSize: 44, fontWeight: 'bold', lineHeight: 52, marginBottom: 8, textAlign: 'center' },
   nextWordLink: { marginTop: 12, paddingVertical: 8, paddingHorizontal: 16, borderRadius: 8, borderWidth: 2 },
   nextWordLinkText: { fontSize: 15, fontWeight: '600' },
-  timerChipsRow: { flexDirection: 'row', gap: 10, marginBottom: 8 },
+  timerChipsRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 10, marginBottom: 8 },
   timerChip: { paddingVertical: 10, paddingHorizontal: 16, borderRadius: 8 },
   timerChipText: { fontSize: 15, fontWeight: '600' },
-  timerCustomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 20, marginVertical: 16, paddingVertical: 8 },
-  timerNumBtn: { width: 48, height: 48, borderRadius: 24, alignItems: 'center', justifyContent: 'center' },
-  timerDisplay: { alignItems: 'center' , backgroundColor: 'transparent' },
-  timerDisplayLarge: { flexDirection: 'row', alignItems: 'center', minWidth: 100, minHeight: 64, justifyContent: 'center', backgroundColor: 'transparent' },
-  timerText: { fontSize: 48, fontWeight: 'bold', minWidth: 72, lineHeight: 56 },
-  timerSecondsLabel: { fontSize: 28, fontWeight: '600', marginLeft: 2, lineHeight: 34 },
+  timerHero: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'center', width: '100%', marginTop: 8, marginBottom: 4, paddingHorizontal: 4 },
+  timerHeroValueBox: { maxWidth: '82%', alignItems: 'flex-end' },
+  timerHeroValue: { fontWeight: 'bold', textAlign: 'right', width: '100%' },
+  timerHeroSuffix: { fontSize: 30, fontWeight: '700', marginLeft: 4, marginBottom: 8 },
+  timerAdjustRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 40, marginTop: 12, marginBottom: 8 },
+  timerNumBtn: { width: 52, height: 52, borderRadius: 26, alignItems: 'center', justifyContent: 'center' },
   timerProgressBar: { height: 8, borderRadius: 4, overflow: 'hidden', marginBottom: 16 },
   timerProgressFill: { height: '100%', borderRadius: 4 },
   timerControls: { flexDirection: 'row', justifyContent: 'center', gap: 12, flexWrap: 'wrap' },

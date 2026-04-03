@@ -12,6 +12,9 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.sergenskenderi.winkroom",
       "buildNumber": "1",
+      "entitlements": {
+        "com.apple.developer.game-center": true
+      },
       "infoPlist": {
         "NSCameraUsageDescription": "Winkroom uses the camera for in-app activities.",
         "NSPhotoLibraryUsageDescription": "Winkroom uses the photo library for in-app activities.",
@@ -26,6 +29,9 @@
         "backgroundColor": "#ffffff"
       },
       "edgeToEdgeEnabled": true,
+      "blockedPermissions": [
+        "android.permission.ACTIVITY_RECOGNITION"
+      ],
       "permissions": [
         "android.permission.RECORD_AUDIO"
       ]
@@ -52,7 +58,9 @@
           "photosPermission": "Winkroom uses the photo library for in-app activities.",
           "cameraPermission": "Winkroom uses the camera for in-app activities."
         }
-      ]
+      ],
+      "expo-font",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
