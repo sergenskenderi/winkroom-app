@@ -37,10 +37,29 @@
       "env": {
         "APP_ENV": "production"
       }
+    },
+    "testflight": {
+      "extends": "production",
+      "env": {
+        "APP_ENV": "testflight"
+      }
+    },
+    "staging": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "APP_ENV": "staging"
+      }
     }
   },
   "submit": {
     "production": {
+      "ios": {},
       "android": {
         "track": "internal",
         "releaseStatus": "draft"
